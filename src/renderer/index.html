@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Electron</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self'; 
+      script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://clerk.clerk.accounts.dev; 
+      connect-src 'self' https://*.clerk.accounts.dev https://clerk.clerk.accounts.dev;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https://img.clerk.com;
+      worker-src 'self' blob:;
+      child-src 'self' blob:;
+    ">
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

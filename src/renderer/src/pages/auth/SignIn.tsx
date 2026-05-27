@@ -1,7 +1,7 @@
+import { SignIn } from "@clerk/react";
+
 export const SignInPage = () => {
     return (
-        <div>
-            Sign in page
-        </div>
+        <SignIn />
     );
 }

@@ -1,21 +1,18 @@
-import { HashRouter, Route, Routes } from "react-router-dom"
-import Home from "./pages/dashboard/Home"
-import { ProtectedRoute } from "./components/ProtectedRoute"
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react"
 
 function App(): React.JSX.Element {
   return (
-    <HashRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </HashRouter>
+    <>
+      <header>
+        <Show when="signed-out">
+          <SignInButton />
+          <SignUpButton />
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
+      </header>
+    </>
   )
 }
 

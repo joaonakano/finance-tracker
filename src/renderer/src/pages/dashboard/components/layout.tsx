@@ -1,4 +1,4 @@
-import { Header } from "@renderer/components/Header"
+import { Header } from "@renderer/components/header"
 
 type Props = {
     children: React.ReactNode

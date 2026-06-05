@@ -5,8 +5,9 @@ import { createRoot } from 'react-dom/client'
 
 import { ClerkProvider } from '@clerk/react'
 import { BrowserRouter, useNavigate } from 'react-router'
-import { RoutesApp } from './routes/routes'
 
+import { RoutesApp } from '@/routes/routes'
+import { QueryProvider } from '@/providers/query-provider'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -24,7 +25,9 @@ function RootLayout() {
       publishableKey={PUBLISHABLE_KEY}
       signInUrl='/sign-in'
     >
-      <RoutesApp />
+      <QueryProvider>
+        <RoutesApp />
+      </QueryProvider>
     </ClerkProvider>
   )
 }

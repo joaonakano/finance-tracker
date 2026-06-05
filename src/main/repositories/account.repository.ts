@@ -1,11 +1,12 @@
 import { db } from "../db/db";
 
 export class AccountRepository {
-    static getAll() {
+    static getAll(user_id: string) {
         const query = db.prepare(`
             SELECT *
-            FROM accounts    
-        `).all()
+            FROM accounts
+            WHERE user_id = ?
+        `).all(user_id)
 
         return query
     }

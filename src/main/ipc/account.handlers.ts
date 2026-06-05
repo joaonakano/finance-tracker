@@ -5,9 +5,9 @@ import { AccountRepository } from "../repositories/account.repository";
 export function registerAccountHandlers() {
     ipcMain.handle(
         IPC_CHANNELS.ACCOUNTS_GET_ALL,
-        async () => {
+        async (_, user_id: string) => {
             try {
-                const accounts = AccountRepository.getAll()
+                const accounts = AccountRepository.getAll(user_id)
 
                 return JSON.parse(JSON.stringify(accounts))
             } catch (err) {

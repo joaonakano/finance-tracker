@@ -1,6 +1,7 @@
+import { Account } from "@shared/types"
 
 export interface Api {
     accounts: {
-        getAll(): Promise<any>
+        getAll(user_id: string): Promise<Account[]>
     }
 }

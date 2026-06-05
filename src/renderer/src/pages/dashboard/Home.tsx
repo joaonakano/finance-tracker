@@ -1,22 +1,25 @@
+import { Button } from "@renderer/components/ui/button";
 import { DashboardLayout } from "./components/layout";
+import { useGetAccounts } from "../accounts/api/use-get-accounts";
 
 export default function Home() {
-    const lidarComClique = async () => {
-        try {
-            const resposta = await window.api.accounts.getAll()
 
-            console.log(resposta)
-        } catch (err) {
-            console.error(err)
-        }
+    const { accounts, isLoading, error, accountId } = useGetAccounts()
+
+    const lidarComClique = () => {
+        console.log("Contas carregadas:", accounts);
+        console.log("ID do usuário:", accountId);
     }
     
+    if (isLoading) return <div>Carregando contas...</div>;
+    if (error) return <div>Erro: {error.message}</div>;
+
     return (
         <>
             <DashboardLayout>
-                <button onClick={lidarComClique}>
-                    Teste banco
-                </button>
+                <Button
+                    onClick={lidarComClique}
+                >Clique em Mim</Button>
             </DashboardLayout>
         </>
     )

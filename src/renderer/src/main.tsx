@@ -3,6 +3,7 @@ import './styles/global.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
+import { Toaster } from 'sonner'
 import { ClerkProvider } from '@clerk/react'
 import { BrowserRouter, useNavigate } from 'react-router'
 
@@ -28,6 +29,7 @@ function RootLayout() {
     >
       <QueryProvider>
         <SheetProvider />
+        <Toaster />
         <RoutesApp />
       </QueryProvider>
     </ClerkProvider>

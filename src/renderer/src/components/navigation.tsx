@@ -79,7 +79,7 @@ export function Navigation() {
     }
     
     return (
-        <nav className="hidden lg:flex items-center gap-x-2 overflow-x-auto">
+        <nav className="hidden lg:flex items-center gap-x-2 flex-wrap">
             {routes.map((route) => (
                 <NavButton
                     key={route.href}

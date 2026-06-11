@@ -1,8 +1,8 @@
 import { useAuth } from "@clerk/react";
 import { Loader2 } from "lucide-react";
-import { Navigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export function ProtectedRoute() {
     const { isLoaded, isSignedIn } = useAuth()
 
     if (!isLoaded) {
@@ -17,5 +17,5 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
         return <Navigate to="/sign-in" />
     }
 
-    return children
+    return <Outlet />
 }

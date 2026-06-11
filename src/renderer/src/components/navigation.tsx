@@ -61,7 +61,7 @@ export function Navigation() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="px-2">
-                    <nav className="flex flex-col gap-y-2 pt-6">
+                    <nav className="flex flex-col gap-y-2 pt-12">
                         {routes.map((route) => (
                             <Button
                                 key={route.href}

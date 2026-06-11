@@ -5,9 +5,10 @@ import { Api, IPC_CHANNELS } from '@shared/ipc'
 // Custom APIs for renderer
 const api: Api = {
   accounts: {
-    getAll: () => 
-      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_GET_ALL),
-    
+    getAll: (user_id) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_GET_ALL, user_id),
+    create: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_CREATE, data),
   }
 }
 

@@ -4,3 +4,9 @@ export interface Account {
     name: string
     plaid_id?: string
 }
+
+export type CreateAccountInput = {
+    user_id: string
+    name: string
+    plaid_id?: string | null
+}

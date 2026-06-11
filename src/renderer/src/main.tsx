@@ -8,6 +8,7 @@ import { BrowserRouter, useNavigate } from 'react-router'
 
 import { RoutesApp } from '@/routes/routes'
 import { QueryProvider } from '@/providers/query-provider'
+import { SheetProvider } from './providers/sheet-provider'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -26,6 +27,7 @@ function RootLayout() {
       signInUrl='/sign-in'
     >
       <QueryProvider>
+        <SheetProvider />
         <RoutesApp />
       </QueryProvider>
     </ClerkProvider>

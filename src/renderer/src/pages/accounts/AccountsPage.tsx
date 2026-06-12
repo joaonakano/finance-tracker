@@ -45,11 +45,11 @@ export default function AccountsPage() {
                 <Card>
                     <CardHeader className="flex flex-col gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
                         <CardTitle className="text-xl font-bold line-clamp-1">
-                            Accounts Page
+                            Módulo de Contas
                         </CardTitle>
                         <Button onClick={newAccount.onOpen} size="sm" className="w-full lg:w-auto lg:ml-auto p-4">
                             <Plus className="size-4 mr-2" />
-                            Add new
+                            Adicionar novo
                         </Button>
                     </CardHeader>
                     <CardContent>

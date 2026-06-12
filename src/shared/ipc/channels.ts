@@ -4,4 +4,5 @@ export const IPC_CHANNELS = {
     ACCOUNTS_CREATE: 'accounts:create',
     ACCOUNTS_UPDATE: 'accounts:update',
     ACCOUNTS_DELETE: 'accounts:delete',
+    ACCOUNTS_BULK_DELETE: 'accounts:bulkDelete',
 }

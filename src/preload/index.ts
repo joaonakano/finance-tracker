@@ -7,8 +7,16 @@ const api: Api = {
   accounts: {
     getAll: (user_id) =>
       ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_GET_ALL, user_id),
+    getById: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_GET_BY_ID, data),
     create: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_CREATE, data),
+    update: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_UPDATE, data),
+    delete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_DELETE, data),
+    bulkDelete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_BULK_DELETE, data),
   }
 }
 

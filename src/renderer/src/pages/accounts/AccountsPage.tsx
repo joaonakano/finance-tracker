@@ -1,36 +1,43 @@
-import { DashboardLayout } from "../dashboard/components/layout";
+import { DashboardLayout } from "@/pages/dashboard/components/layout";
 
-import { useNewAccount } from "./hooks/use-new-account";
+import { useNewAccount } from "@/pages/accounts/hooks/use-new-account";
+import { useGetAccounts } from "@/pages/accounts/api/use-get-accounts";
 
 import { Button } from "@renderer/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
-import { Plus } from "lucide-react";
-import { columns, Payment } from "./components/columns";
-import { DataTable } from "@renderer/components/data-table";
+import { Loader2, Plus } from "lucide-react";
 
-const data: Payment[] = [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52g",
-      amount: 100,
-      status: "pending",
-      email: "p@example.com",
-    },
-    {
-      id: "728ed52g",
-      amount: 100,
-      status: "pending",
-      email: "a@example.com",
-    },
-  ]
+import { columns } from "@/pages/accounts/components/columns";
+
+import { DataTable } from "@renderer/components/data-table";
+import { Skeleton } from "@renderer/components/ui/skeleton";
+import { useBulkDeleteAccounts } from "./api/use-bulk-delete";
 
 export default function AccountsPage() {
     const newAccount = useNewAccount()
+    const deleteAccounts = useBulkDeleteAccounts()
+    
+    const { accounts, isLoading, error } = useGetAccounts()
+
+    const isDisabled = isLoading
+    
+    if (isLoading) {
+        return (
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+                <Card>
+                    <CardHeader>
+                        <Skeleton className="h-8 w-48"/>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-125 w-full flex items-center justify-center">
+                            <Loader2 className="size-6 text-slate-300 animate-spin" />
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )        
+    }
+    if (error) return <div>Erro: {error.message}</div>
     
     return (
         <DashboardLayout>
@@ -46,7 +53,11 @@ export default function AccountsPage() {
                         </Button>
                     </CardHeader>
                     <CardContent>
-                        <DataTable onDelete={() => {}} filterKey="email" columns={columns} data={data} />
+                        <DataTable onDelete={(row) => {
+                            const ids = row.map((r) => r.original.id)
+                            deleteAccounts.mutate({ ids })
+                            console.log({ ids })
+                        }} filterKey="name" columns={columns} data={accounts} disabled={isDisabled} />
                     </CardContent>
                 </Card>
             </div>

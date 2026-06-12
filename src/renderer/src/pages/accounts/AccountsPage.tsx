@@ -3,8 +3,31 @@ import { DashboardLayout } from "../dashboard/components/layout";
 import { useNewAccount } from "./hooks/use-new-account";
 
 import { Button } from "@renderer/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@renderer/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
 import { Plus } from "lucide-react";
+import { columns, Payment } from "./components/columns";
+import { DataTable } from "@renderer/components/data-table";
+
+const data: Payment[] = [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52g",
+      amount: 100,
+      status: "pending",
+      email: "p@example.com",
+    },
+    {
+      id: "728ed52g",
+      amount: 100,
+      status: "pending",
+      email: "a@example.com",
+    },
+  ]
 
 export default function AccountsPage() {
     const newAccount = useNewAccount()
@@ -22,6 +45,9 @@ export default function AccountsPage() {
                             Add new
                         </Button>
                     </CardHeader>
+                    <CardContent>
+                        <DataTable onDelete={() => {}} filterKey="email" columns={columns} data={data} />
+                    </CardContent>
                 </Card>
             </div>
         </DashboardLayout>

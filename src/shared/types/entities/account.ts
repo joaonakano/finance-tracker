@@ -12,7 +12,7 @@ export type CreateAccountInput = {
 }
 
 export type GetAccountInput = {
-    id: string
+    id: string | undefined
     user_id: string
 }
 

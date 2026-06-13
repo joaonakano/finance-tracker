@@ -1,0 +1,177 @@
+GUIA RAPIDO: IPC + HOOKS NO ELECTRON
+
+Neste projeto voce nao usa rotas GET/POST do Next.js para falar com o banco.
+O fluxo local e:
+
+Renderer React -> window.api -> preload -> ipcRenderer.invoke -> ipcMain.handle -> repository -> SQLite
+
+1. Tipos compartilhados
+Arquivo: src/shared/types/entities/<entidade>.ts
+
+Crie a interface da entidade e os inputs das operacoes:
+
+export interface Transaction {
+    id: string
+    user_id: string
+    amount: number
+}
+
+export type GetTransactionInput = {
+    id: string
+    user_id: string
+}
+
+export type CreateTransactionInput = {
+    user_id: string
+    amount: number
+}
+
+export type UpdateTransactionInput = {
+    id: string
+    user_id: string
+    amount: number
+}
+
+export type DeleteTransactionInput = {
+    id: string
+    user_id: string
+}
+
+2. Canais IPC
+Arquivo: src/shared/ipc/channels.ts
+
+Adicione nomes de canais. Eles substituem as rotas HTTP:
+
+TRANSACTIONS_GET_ALL: 'transactions:getAll'
+TRANSACTIONS_GET_BY_ID: 'transactions:getById'
+TRANSACTIONS_CREATE: 'transactions:create'
+TRANSACTIONS_UPDATE: 'transactions:update'
+TRANSACTIONS_DELETE: 'transactions:delete'
+
+3. Contrato da API
+Arquivo: src/shared/ipc/api.ts
+
+Adicione a entidade no objeto Api:
+
+transactions: {
+    getAll(user_id: string): Promise<Transaction[]>
+    getById(data: GetTransactionInput): Promise<Transaction | undefined>
+    create(data: CreateTransactionInput): Promise<Transaction>
+    update(data: UpdateTransactionInput): Promise<Transaction | undefined>
+    delete(data: DeleteTransactionInput): Promise<boolean>
+}
+
+4. Preload
+Arquivo: src/preload/index.ts
+
+Exponha os metodos para o React usar com window.api:
+
+transactions: {
+    getAll: (user_id) =>
+        ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_GET_ALL, user_id),
+    getById: (data) =>
+        ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_GET_BY_ID, data),
+    create: (data) =>
+        ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_CREATE, data),
+    update: (data) =>
+        ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_UPDATE, data),
+    delete: (data) =>
+        ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_DELETE, data),
+}
+
+5. Repository
+Arquivo: src/main/repositories/<entidade>.repository.ts
+
+Aqui fica o SQL. O repository recebe inputs simples e retorna dados simples.
+Exemplo do padrao:
+
+static getById(data: GetTransactionInput): Transaction | undefined {
+    return db.prepare(`
+        SELECT *
+        FROM transactions
+        WHERE id = ?
+          AND user_id = ?
+    `).get(data.id, data.user_id) as Transaction | undefined
+}
+
+6. Handlers IPC
+Arquivo: src/main/ipc/<entidade>.handlers.ts
+
+Ligue cada canal ao repository:
+
+ipcMain.handle(
+    IPC_CHANNELS.TRANSACTIONS_GET_BY_ID,
+    async (_, data: GetTransactionInput) => {
+        const transaction = TransactionRepository.getById(data)
+        return transaction ? JSON.parse(JSON.stringify(transaction)) : undefined
+    }
+)
+
+Depois registre o handler no src/main/index.ts:
+
+registerTransactionHandlers()
+
+7. Hooks no renderer
+Arquivos: src/renderer/src/pages/<entidade>/api/use-*.ts
+
+Consultas usam useQuery:
+
+export const useGetTransaction = (id?: string) => {
+    const { userId, isLoaded } = useAuth()
+
+    return useQuery({
+        queryKey: ["transaction", userId, id],
+        queryFn: async () => {
+            if (!userId || !id) throw new Error("Usuario nao encontrado")
+            const response = await window.api.transactions.getById({ id, user_id: userId })
+            if (!response) throw new Error("Transacao nao encontrada")
+            return response
+        },
+        enabled: !!userId && isLoaded && !!id,
+    })
+}
+
+Alteracoes usam useMutation:
+
+export const useUpdateTransaction = () => {
+    const { userId } = useAuth()
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (values: { id: string; amount: number }) => {
+            if (!userId) throw new Error("Usuario nao encontrado")
+            return window.api.transactions.update({
+                id: values.id,
+                user_id: userId,
+                amount: values.amount,
+            })
+        },
+        onSuccess: (_, values) => {
+            queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
+            queryClient.invalidateQueries({ queryKey: ["transaction", userId, values.id] })
+        },
+    })
+}
+
+8. Sheet de edicao
+
+O sheet de edicao normalmente usa tres coisas:
+
+- Zustand para guardar o id aberto: useOpenTransaction()
+- useQuery para buscar os dados pelo id: useGetTransaction(id)
+- useMutation para salvar/deletar: useUpdateTransaction(), useDeleteTransaction()
+
+Fluxo:
+
+1. Usuario clica em editar na tabela.
+2. onOpen(id) salva o id no Zustand e abre o sheet.
+3. O sheet chama useGetTransaction(id).
+4. Quando os dados chegam, eles entram em defaultValues do formulario.
+5. Submit chama update.mutate({ id, ...values }).
+6. Sucesso invalida as queries e fecha o sheet.
+
+Regra mental:
+
+- useQuery = pegar/listar dados.
+- useMutation = criar, editar ou apagar dados.
+- GET/POST sao termos de HTTP/Next.js. Aqui, pense em canais IPC: entidade:acao.

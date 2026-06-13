@@ -1,8 +1,12 @@
 import { Button } from "@renderer/components/ui/button"
 import { Checkbox } from "@renderer/components/ui/checkbox"
+import { useOpenAccount } from "@renderer/pages/accounts/hooks/use-open-account"
 import { Account } from "@shared/types"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Pencil } from "lucide-react"
+import { Actions } from "./actions"
+
+
 
 export const columns: ColumnDef<Account>[] = [
   {
@@ -40,5 +44,13 @@ export const columns: ColumnDef<Account>[] = [
         </Button>
       )
     },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <Actions id={row.original.id} />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
 ]

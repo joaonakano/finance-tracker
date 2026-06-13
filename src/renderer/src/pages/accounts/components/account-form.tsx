@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Trash } from "lucide-react";
 
 import { Button } from "@renderer/components/ui/button";
@@ -24,6 +24,10 @@ export const AccountForm = ({
     disabled,
 }: Props) => {
     const [name, setName] = useState(defaultValues?.name ?? "")
+
+    useEffect(() => {
+        setName(defaultValues?.name ?? "")
+    }, [defaultValues?.name])
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()

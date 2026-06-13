@@ -15,7 +15,7 @@ export const useBulkDeleteAccounts = (options?: {
     return useMutation({
         mutationFn: async ({ ids }: BulkDeleteIds) => {
             if (!userId) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuario não encontrado")
             }
             
             return window.api.accounts.bulkDelete({

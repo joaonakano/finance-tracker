@@ -24,7 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Input } from "./ui/input"
-import { Trash } from "lucide-react"
+import { CircleAlert, Trash } from "lucide-react"
 import { useConfirm } from "@renderer/hooks/use-confirm"
 
 interface DataTableProps<TData, TValue> {
@@ -34,6 +34,13 @@ interface DataTableProps<TData, TValue> {
   onDelete: (rows: Row<TData>[]) => void,
   disabled?: boolean,
 }
+
+const FILTER_LABELS: Record<string, string> = {
+  name: "Nome",
+  category: "Categoria",
+  amount: "Valor",
+  createdAt: "Data de Criação",
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -73,7 +80,7 @@ export function DataTable<TData, TValue>({
       <ConfirmDialog />
         <div className="flex items-center py-4">
             <Input
-            placeholder={`Filtrar por ${filterKey}...`}
+            placeholder={`Filtrar por ${FILTER_LABELS[filterKey] ?? filterKey}`}
             value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
                 table.getColumn(filterKey)?.setFilterValue(event.target.value)
@@ -137,7 +144,10 @@ export function DataTable<TData, TValue>({
             ) : (
                 <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <CircleAlert className="size-6 opacity-70 hover:opacity-100 hover:animate-pulse" />
+                      <span>Não foram encontrados resultados.</span>
+                  </div>
                 </TableCell>
                 </TableRow>
             )}

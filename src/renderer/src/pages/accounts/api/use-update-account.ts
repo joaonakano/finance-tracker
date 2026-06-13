@@ -17,7 +17,7 @@ export const useUpdateAccount = (options?: {
     return useMutation({
         mutationFn: async (values: UpdateAccountValues) => {
             if (!userId) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuario não encontrado")
             }
 
             const account = await window.api.accounts.update({

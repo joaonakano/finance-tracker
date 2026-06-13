@@ -13,7 +13,7 @@ export const useCreateAccount = (options?: {
     return useMutation({
         mutationFn: async (values: AccountFormValues) => {
             if (!userId) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuario não encontrado")
             }
 
             return window.api.accounts.create({

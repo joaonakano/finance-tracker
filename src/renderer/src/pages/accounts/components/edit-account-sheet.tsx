@@ -19,7 +19,7 @@ export const EditAccountSheet = () => {
     const accountQuery = useGetAccount(id)
     const [ConfirmDialog, confirm] = useConfirm(
         "Tem certeza?",
-        "Essa conta sera removida permanentemente."
+        "Essa conta será removida permanentemente."
     )
     const updateAccount = useUpdateAccount({
         onSuccess: onClose,

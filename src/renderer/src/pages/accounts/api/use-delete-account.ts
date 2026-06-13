@@ -15,7 +15,7 @@ export const useDeleteAccount = (options?: {
     return useMutation({
         mutationFn: async ({ id }: DeleteAccountValues) => {
             if (!userId) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuário não encontrado")
             }
 
             const deleted = await window.api.accounts.delete({
@@ -24,7 +24,7 @@ export const useDeleteAccount = (options?: {
             })
 
             if (!deleted) {
-                throw new Error("Conta nao encontrada")
+                throw new Error("Conta não encontrada")
             }
 
             return id

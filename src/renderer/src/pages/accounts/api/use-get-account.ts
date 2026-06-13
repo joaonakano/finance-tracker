@@ -16,7 +16,7 @@ export const useGetAccount = (id?: string): UseAccountsResult => {
         queryKey: ["account", userId, id],
         queryFn: async () => {
             if (!userId || !id) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuario não encontrado")
             }
 
             const response = await window.api.accounts.getById({

@@ -36,10 +36,10 @@ interface DataTableProps<TData, TValue> {
 }
 
 const FILTER_LABELS: Record<string, string> = {
-  name: "Nome",
-  category: "Categoria",
-  amount: "Valor",
-  createdAt: "Data de Criação",
+  name: "nome",
+  category: "categoria",
+  amount: "valor",
+  createdAt: "data de criação",
 };
 
 export function DataTable<TData, TValue>({
@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
       <ConfirmDialog />
         <div className="flex items-center py-4">
             <Input
-            placeholder={`Filtrar por ${FILTER_LABELS[filterKey] ?? filterKey}`}
+            placeholder={`Filtrar ${FILTER_LABELS[filterKey] ?? filterKey}...`}
             value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
                 table.getColumn(filterKey)?.setFilterValue(event.target.value)

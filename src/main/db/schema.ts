@@ -8,5 +8,12 @@ export function setupSchema() {
             name TEXT NOT NULL,
             plaid_id TEXT
         );
+
+        CREATE TABLE IF NOT EXISTS categories (
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            name TEXT NOT NULL,
+            plaid_id TEXT
+        );
     `)
 }

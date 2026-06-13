@@ -17,6 +17,20 @@ const api: Api = {
       ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_DELETE, data),
     bulkDelete: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.ACCOUNTS_BULK_DELETE, data),
+  },
+  categories: {
+    getAll: (user_id) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_GET_ALL, user_id),
+    getById: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_GET_BY_ID, data),
+    create: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_CREATE, data),
+    update: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_UPDATE, data),
+    delete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_DELETE, data),
+    bulkDelete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_BULK_DELETE, data),
   }
 }
 

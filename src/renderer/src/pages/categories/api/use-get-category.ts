@@ -1,31 +1,31 @@
 import { useAuth } from "@clerk/react"
-import { Account } from "@shared/types"
+import { Category } from "@shared/types"
 import { useQuery } from "@tanstack/react-query"
 
-type UseAccountsResult = {
+type UseCategoriesResult = {
     accountId: string | null | undefined
-    account: Account | null | undefined
+    category: Category | null | undefined
     isLoading: boolean
     error: Error | null
 }
 
-export const useGetAccount = (id?: string): UseAccountsResult => {
+export const useGetCategory = (id?: string): UseCategoriesResult => {
     const { userId, isLoaded } = useAuth()
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ["account", userId, id],
+        queryKey: ["category", userId, id],
         queryFn: async () => {
             if (!userId || !id) {
                 throw new Error("Usuário não encontrado")
             }
 
-            const response = await window.api.accounts.getById({
+            const response = await window.api.categories.getById({
                 user_id: userId,
                 id,
             })
 
             if (!response) {
-                throw new Error("Falha ao localizar conta")
+                throw new Error("Falha ao localizar categoria")
             }
 
             return response
@@ -35,7 +35,7 @@ export const useGetAccount = (id?: string): UseAccountsResult => {
 
     return {
         accountId: userId,
-        account: data ?? null,
+        category: data ?? null,
         isLoading,
         error,
     }

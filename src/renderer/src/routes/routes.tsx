@@ -5,6 +5,7 @@ import { SignInPage } from "@renderer/pages/auth/SignIn";
 import { SignUpPage } from "@renderer/pages/auth/SignUp";
 import { NotFoundPage } from "@renderer/pages/auth/NotFound";
 import AccountsPage from "@renderer/pages/accounts/AccountsPage";
+import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
 
 export function RoutesApp() {
     return (
@@ -15,6 +16,7 @@ export function RoutesApp() {
             <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/accounts" element={<AccountsPage />} />
+                <Route path="/categories" element={<CategoriesPage />} />
             </Route>
 
             {/* Catch-all route */}

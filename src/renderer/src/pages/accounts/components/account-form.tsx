@@ -49,7 +49,7 @@ export const AccountForm = ({
                     disabled={disabled}
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder="Ex: Dinheiro, Banco, Cartao"
+                    placeholder="Ex: Dinheiro, Banco, Cartão"
                 />
             </label>
 
@@ -58,7 +58,7 @@ export const AccountForm = ({
                 className="w-full"
                 disabled={disabled || !name.trim()}
             >
-                {id ? "Salvar alteracoes" : "Criar conta"}
+                {id ? "Salvar alterações" : "Criar conta"}
             </Button>
 
             {!!id && (

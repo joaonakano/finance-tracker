@@ -27,7 +27,7 @@ export const useUpdateAccount = (options?: {
             })
 
             if (!account) {
-                throw new Error("Conta nao encontrada")
+                throw new Error("Conta não encontrada")
             }
 
             return account

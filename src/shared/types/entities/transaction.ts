@@ -55,3 +55,17 @@ export type BulkDeleteTransactionsInput = {
     ids: string[]
     user_id: string
 }
+
+export type BulkCreateTransactionItem = {
+    amount: number
+    payee: string
+    notes?: string | null
+    date: string
+    account_id: string
+    category_id?: string | null
+}
+
+export type BulkCreateTransactionsInput = {
+    user_id: string
+    transactions: BulkCreateTransactionItem[]
+}

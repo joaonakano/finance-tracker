@@ -3,18 +3,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Edit, MoreHorizontal, Trash } from "lucide-react"
 
 import { useConfirm } from "@renderer/hooks/use-confirm"
-import { useOpenCategory } from "../hooks/use-open-category"
-import { useDeleteCategory } from "../api/use-delete-category"
+import { useOpenTransaction } from "../hooks/use-open-transaction"
+import { useDeleteTransaction } from "../api/use-delete-transaction"
 
 export const Actions = ({ id }: { id: string }) => {
-    const { onOpen } = useOpenCategory()
+    const { onOpen } = useOpenTransaction()
 
     const [ConfirmDialog, confirm] = useConfirm(
         "Tem certeza?",
-        "Essa categoria será removida permanentemente."
+        "Essa transação será removida permanentemente."
     )
 
-    const deleteCategory = useDeleteCategory()
+    const deleteTransaction = useDeleteTransaction()
 
     const onDelete = async () => {
         if (!id) return
@@ -22,7 +22,7 @@ export const Actions = ({ id }: { id: string }) => {
         const ok = await confirm()
 
         if (ok) {
-            deleteCategory.mutate({ id })
+            deleteTransaction.mutate({ id })
         }
     }
 

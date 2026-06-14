@@ -48,15 +48,14 @@ export default function TransactionsPage() {
                         </CardTitle>
                         <Button onClick={newTransaction.onOpen} size="sm" className="w-full lg:w-auto lg:ml-auto p-4">
                             <Plus className="size-4 mr-2" />
-                            Adicionar novo
+                            Adicionar
                         </Button>
                     </CardHeader>
                     <CardContent>
                         <DataTable onDelete={(row) => {
                             const ids = row.map((r) => r.original.id)
                             deleteTransactions.mutate({ ids })
-                            console.log({ ids })
-                        }} filterKey="name" columns={columns} data={transactions} disabled={isDisabled} />
+                        }} filterKey="payee" columns={columns} data={transactions} disabled={isDisabled} />
                     </CardContent>
                 </Card>
             </div>

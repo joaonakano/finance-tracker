@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto"
 
 import {
+    BulkCreateTransactionsInput,
     BulkDeleteTransactionsInput,
     CreateTransactionInput,
     DeleteTransactionInput,
@@ -194,6 +195,57 @@ export class TransactionRepository {
         `).run(...data.ids, data.user_id)
 
         return result.changes
+    }
+
+    static bulkCreate(data: BulkCreateTransactionsInput): number {
+        if (data.transactions.length === 0) {
+            return 0
+        }
+
+        const insert = db.prepare(`
+            INSERT INTO transactions (
+                id,
+                amount,
+                payee,
+                notes,
+                date,
+                account_id,
+                category_id
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `)
+
+        let insertedCount = 0
+
+        const runAll = db.transaction(() => {
+            for (const tx of data.transactions) {
+                if (!this.accountBelongsToUser(tx.account_id, data.user_id)) {
+                    continue
+                }
+
+                if (tx.category_id && !this.categoryBelongsToUser(tx.category_id, data.user_id)) {
+                    continue
+                }
+
+                const id = randomUUID()
+
+                insert.run(
+                    id,
+                    tx.amount,
+                    tx.payee,
+                    tx.notes ?? null,
+                    tx.date,
+                    tx.account_id,
+                    tx.category_id ?? null
+                )
+
+                insertedCount++
+            }
+        })
+
+        runAll()
+
+        return insertedCount
     }
 
     private static accountBelongsToUser(account_id: string, user_id: string): boolean {

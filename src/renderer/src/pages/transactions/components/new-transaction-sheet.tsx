@@ -6,19 +6,18 @@ import {
     SheetTitle,
 } from "@/components/ui/sheet";
 
-import { CategoryForm, CategoryFormValues } from "./category-form";
+import { TransactionForm, TransactionFormValues } from "./transaction-form";
 import { useNewTransaction } from "../hooks/use-new-transaction";
 import { useCreateTransaction } from "../api/use-create-transaction";
 
-
 export const NewTransactionSheet = () => {
     const { isOpen, onClose } = useNewTransaction()
-    const createCategory = useCreateTransaction({
+    const createTransaction = useCreateTransaction({
         onSuccess: onClose
     })
 
     const onSubmit = (values: TransactionFormValues) => {
-        createCategory.mutate(values)
+        createTransaction.mutate(values)
     }
 
     return (
@@ -37,14 +36,14 @@ export const NewTransactionSheet = () => {
                 </SheetHeader>
 
                 <div className="px-4">
-                    <CategoryForm
+                    <TransactionForm
                         onSubmit={onSubmit}
-                        disabled={createCategory.isPending}
+                        disabled={createTransaction.isPending}
                     />
 
-                    {createCategory.error ? (
+                    {createTransaction.error ? (
                         <p className="mt-3 text-sm text-destructive">
-                            {createCategory.error.message}
+                            {createTransaction.error.message}
                         </p>
                     ) : null}
                 </div>

@@ -9,7 +9,7 @@ import {
 import { useConfirm } from "@/hooks/use-confirm"
 import { Loader2 } from "lucide-react"
 
-import { CategoryForm, CategoryFormValues } from "./category-form"
+import { TransactionForm, TransactionFormValues } from "./transaction-form"
 import { useOpenTransaction } from "../hooks/use-open-transaction"
 import { useGetTransaction } from "../api/use-get-transaction"
 import { useUpdateTransaction } from "../api/use-update-transaction"
@@ -17,25 +17,25 @@ import { useDeleteTransaction } from "../api/use-delete-transaction"
 
 export const EditTransactionSheet = () => {
     const { isOpen, onClose, id } = useOpenTransaction()
-    const categoryQuery = useGetTransaction(id)
+    const transactionQuery = useGetTransaction(id)
     const [ConfirmDialog, confirm] = useConfirm(
         "Tem certeza?",
-        "Essa categoria será removida permanentemente."
+        "Essa transação será removida permanentemente."
     )
-    const updateCategory = useUpdateTransaction({
+    const updateTransaction = useUpdateTransaction({
         onSuccess: onClose,
     })
-    const deleteCategory = useDeleteTransaction({
+    const deleteTransaction = useDeleteTransaction({
         onSuccess: onClose,
     })
 
-    const isPending = updateCategory.isPending || deleteCategory.isPending
-    const isDisabled = categoryQuery.isLoading || isPending
+    const isPending = updateTransaction.isPending || deleteTransaction.isPending
+    const isDisabled = transactionQuery.isLoading || isPending
 
     const onSubmit = (values: TransactionFormValues) => {
         if (!id) return
 
-        updateCategory.mutate({
+        updateTransaction.mutate({
             id,
             ...values,
         })
@@ -47,9 +47,20 @@ export const EditTransactionSheet = () => {
         const ok = await confirm()
 
         if (ok) {
-            deleteCategory.mutate({ id })
+            deleteTransaction.mutate({ id })
         }
     }
+
+    const defaultValues = transactionQuery.transaction
+        ? {
+            amount: transactionQuery.transaction.amount,
+            payee: transactionQuery.transaction.payee,
+            notes: transactionQuery.transaction.notes,
+            date: transactionQuery.transaction.date,
+            account_id: transactionQuery.transaction.account_id,
+            category_id: transactionQuery.transaction.category_id,
+        }
+        : undefined
 
     return (
         <>
@@ -69,35 +80,33 @@ export const EditTransactionSheet = () => {
                     </SheetHeader>
 
                     <div className="px-4">
-                        {categoryQuery.isLoading ? (
+                        {transactionQuery.isLoading ? (
                             <div className="flex h-40 items-center justify-center">
                                 <Loader2 className="size-6 animate-spin text-slate-300" />
                             </div>
                         ) : (
-                            <CategoryForm
+                            <TransactionForm
                                 id={id}
-                                defaultValues={categoryQuery.transaction ? {
-                                    name: categoryQuery.transaction,
-                                } : undefined}
+                                defaultValues={defaultValues}
                                 onSubmit={onSubmit}
                                 onDelete={onDelete}
                                 disabled={isDisabled}
                             />
                         )}
 
-                        {categoryQuery.error ? (
+                        {transactionQuery.error ? (
                             <p className="mt-3 text-sm text-destructive">
-                                {categoryQuery.error.message}
+                                {transactionQuery.error.message}
                             </p>
                         ) : null}
-                        {updateCategory.error ? (
+                        {updateTransaction.error ? (
                             <p className="mt-3 text-sm text-destructive">
-                                {updateCategory.error.message}
+                                {updateTransaction.error.message}
                             </p>
                         ) : null}
-                        {deleteCategory.error ? (
+                        {deleteTransaction.error ? (
                             <p className="mt-3 text-sm text-destructive">
-                                {deleteCategory.error.message}
+                                {deleteTransaction.error.message}
                             </p>
                         ) : null}
                     </div>

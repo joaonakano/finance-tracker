@@ -1,5 +1,6 @@
 import {
     Account,
+    BulkCreateTransactionsInput,
     BulkDeleteAccountsInput,
     BulkDeleteCategoriesInput,
     BulkDeleteTransactionsInput,
@@ -46,5 +47,6 @@ export interface Api {
         update(data: UpdateTransactionInput): Promise<TransactionWithRelations | undefined>
         delete(data: DeleteTransactionInput): Promise<boolean>
         bulkDelete(data: BulkDeleteTransactionsInput): Promise<number>
+        bulkCreate(data: BulkCreateTransactionsInput): Promise<number>
     }
 }

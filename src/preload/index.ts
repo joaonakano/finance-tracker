@@ -45,6 +45,8 @@ const api: Api = {
       ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_DELETE, data),
     bulkDelete: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_BULK_DELETE, data),
+    bulkCreate: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_BULK_CREATE, data),
   },
 }
 

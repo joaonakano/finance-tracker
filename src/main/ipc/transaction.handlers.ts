@@ -1,6 +1,7 @@
 import { ipcMain } from "electron"
 import { IPC_CHANNELS } from "@shared/ipc"
 import {
+    BulkCreateTransactionsInput,
     BulkDeleteTransactionsInput,
     CreateTransactionInput,
     DeleteTransactionInput,
@@ -84,6 +85,18 @@ export function registerTransactionHandlers() {
                 return TransactionRepository.bulkDelete(data)
             } catch (err) {
                 console.error("[IPC] transactions:bulk_delete error:", err)
+                return 0
+            }
+        }
+    )
+
+    ipcMain.handle(
+        IPC_CHANNELS.TRANSACTIONS_BULK_CREATE,
+        async (_, data: BulkCreateTransactionsInput) => {
+            try {
+                return TransactionRepository.bulkCreate(data)
+            } catch (err) {
+                console.error("[IPC] transactions:bulk_create error:", err)
                 return 0
             }
         }

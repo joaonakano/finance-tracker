@@ -19,4 +19,5 @@ export const IPC_CHANNELS = {
     TRANSACTIONS_UPDATE: 'transactions:update',
     TRANSACTIONS_DELETE: 'transactions:delete',
     TRANSACTIONS_BULK_DELETE: 'transactions:bulkDelete',
+    TRANSACTIONS_BULK_CREATE: 'transactions:bulkCreate',
 }

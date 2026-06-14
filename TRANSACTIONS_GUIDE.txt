@@ -217,3 +217,20 @@ ARQUIVOS PRINCIPAIS
 - src/main/repositories/transaction.repository.ts
 - src/main/ipc/transaction.handlers.ts
 - src/renderer/src/pages/transactions/api/*
+
+   ### Como usar o Bulk Create para CSV futuramente
+
+   [ts]
+   import { useBulkCreateTransactions } from "@/pages/transactions/api/use-bulk-create-transactions"
+
+   const bulkCreate = useBulkCreateTransactions({
+       onSuccess: (count) => console.log(`${count} importadas`)
+   })
+
+   // Depois de parsear o CSV:
+   bulkCreate.mutate({
+       transactions: [
+           { amount: 120, payee: "Mercado", date: "2026-06-14", account_id: "acc-id" },
+           { amount: 50, payee: "Netflix", date: "2026-06-14", account_id: "acc-id", category_id: "cat-id" },
+       ]
+   })

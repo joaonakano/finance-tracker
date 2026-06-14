@@ -15,7 +15,7 @@ export const useDeleteTransaction = (options?: {
     return useMutation({
         mutationFn: async ({ id }: DeleteTransactionValues) => {
             if (!userId) {
-                throw new Error("Usuario nao encontrado")
+                throw new Error("Usuário não encontrado")
             }
 
             const deleted = await window.api.transactions.delete({

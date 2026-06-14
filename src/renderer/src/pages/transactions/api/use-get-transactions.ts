@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/react"
+import { convertAmountFromMiliunits } from "@renderer/lib/utils"
 import { GetTransactionsInput, TransactionWithRelations } from "@shared/types"
 import { useQuery } from "@tanstack/react-query"
 
@@ -31,7 +32,10 @@ export const useGetTransactions = (
     })
 
     return {
-        transactions: data ?? [],
+        transactions: data?.map((transaction) => ({
+            ...transaction,
+            amount: convertAmountFromMiliunits(transaction.amount)
+        })) ?? [],
         isLoading,
         error,
     }

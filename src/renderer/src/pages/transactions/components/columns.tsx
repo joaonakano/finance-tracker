@@ -5,7 +5,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Actions } from "./actions"
 import { format } from "date-fns"
-import { convertAmountFromMiliunits } from "@renderer/lib/utils"
+import { convertAmountFromMiliunits, formatCurrency } from "@renderer/lib/utils"
+import { Badge } from "@renderer/components/ui/badge"
 
 export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
@@ -29,6 +30,42 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+    {
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Data
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const date = row.getValue("date") as string
+      return format(new Date(date + "T00:00:00"), "dd/MM/yyyy")
+    },
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Categoria
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const category = row.getValue("category") as string | null
+      return category ?? "—"
+    },
   },
   {
     accessorKey: "payee",
@@ -58,33 +95,21 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
       )
     },
     cell: ({ row }) => {
-      const amountInMiliunits = parseFloat(row.getValue("amount"))
-      const amountToNormalCurrency = convertAmountFromMiliunits(amountInMiliunits)
+      const amount = parseFloat(row.getValue("amount"))
 
-      const formatted = new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(amountToNormalCurrency)
+      // const formatted = new Intl.NumberFormat("pt-BR", {
+      //   style: "currency",
+      //   currency: "BRL",
+      // }).format(amountToNormalCurrency)
 
-      return <span className={amountToNormalCurrency < 0 ? "text-red-500" : ""}>R$ {amountToNormalCurrency}</span>
-    },
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Data
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const date = row.getValue("date") as string
-      return format(new Date(date + "T00:00:00"), "dd/MM/yyyy")
+        <Badge
+          variant={amount < 0 ? "destructive" : "primary"}
+          className="tx-xs font-medium px-3.5 py-4"
+          >
+            {formatCurrency(amount)}
+        </Badge>
+    )
     },
   },
   {
@@ -99,24 +124,6 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    },
-  },
-  {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Categoria
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const category = row.getValue("category") as string | null
-      return category ?? "—"
     },
   },
   {

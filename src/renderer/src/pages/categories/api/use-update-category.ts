@@ -1,8 +1,7 @@
 import { toast } from "sonner"
 import { useAuth } from "@clerk/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-
-import { CategoryFormValues } from "@/pages/accounts/components/account-form"
+import { CategoryFormValues } from "../components/category-form"
 
 type UpdateCategoryValues = CategoryFormValues & {
     id: string

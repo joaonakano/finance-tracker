@@ -49,7 +49,7 @@ export const CategoryForm = ({
                     disabled={disabled}
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder="Ex: Dinheiro, Banco, Cartão"
+                    placeholder="Ex: Comida, Viagem, etc."
                 />
             </label>
 
@@ -58,7 +58,7 @@ export const CategoryForm = ({
                 className="w-full"
                 disabled={disabled || !name.trim()}
             >
-                {id ? "Salvar alterações" : "Criar conta"}
+                {id ? "Salvar alterações" : "Criar categoria"}
             </Button>
 
             {!!id && (
@@ -70,7 +70,7 @@ export const CategoryForm = ({
                     variant="outline"
                 >
                     <Trash className="mr-2 size-4" />
-                    Excluir conta
+                    Excluir categoria
                 </Button>
             )}
         </form>

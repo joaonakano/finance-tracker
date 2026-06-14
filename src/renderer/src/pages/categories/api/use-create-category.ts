@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { useAuth } from "@clerk/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CategoryFormValues } from "../components/category-form";
 
 export const useCreateCategory = (options?: {
     onSuccess?: () => void

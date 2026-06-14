@@ -1,7 +1,7 @@
 import { DashboardLayout } from "@/pages/dashboard/components/layout";
 
-import { useNewAccount } from "@/pages/accounts/hooks/use-new-account";
-import { useGetAccounts } from "@/pages/accounts/api/use-get-accounts";
+import { useNewAccount } from "@renderer/pages/accounts/hooks/use-new-account";
+import { useGetAccounts } from "@renderer/pages/accounts/api/use-get-accounts";
 
 import { Button } from "@renderer/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
@@ -11,7 +11,7 @@ import { columns } from "@/pages/accounts/components/columns";
 
 import { DataTable } from "@renderer/components/data-table";
 import { Skeleton } from "@renderer/components/ui/skeleton";
-import { useBulkDeleteAccounts } from "./api/use-bulk-delete";
+import { useBulkDeleteAccounts } from "./api/use-bulk-delete-accounts";
 
 export default function AccountsPage() {
     const newAccount = useNewAccount()

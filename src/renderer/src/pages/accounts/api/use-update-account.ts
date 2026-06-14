@@ -36,6 +36,9 @@ export const useUpdateAccount = (options?: {
             toast.success("Conta atualizada")
             queryClient.invalidateQueries({ queryKey: ["accounts", userId] })
             queryClient.invalidateQueries({ queryKey: ["account", userId, account.id] })
+            
+            queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
+            
             options?.onSuccess?.()
         },
         onError: () => {

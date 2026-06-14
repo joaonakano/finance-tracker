@@ -5,8 +5,10 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Actions } from "./actions"
 import { format } from "date-fns"
-import { convertAmountFromMiliunits, formatCurrency } from "@renderer/lib/utils"
+import { formatCurrency } from "@renderer/lib/utils"
 import { Badge } from "@renderer/components/ui/badge"
+import { AccountColumn } from "./account-column"
+import { CategoryColumn } from "./category-column"
 
 export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
@@ -63,8 +65,13 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
       )
     },
     cell: ({ row }) => {
-      const category = row.getValue("category") as string | null
-      return category ?? "—"
+      return (
+        <CategoryColumn
+          id={row.original.id}
+          category={row.original.category}
+          categoryId={row.original.category_id}
+        />
+      )
     },
   },
   {
@@ -125,6 +132,14 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      return (
+        <AccountColumn 
+          account={row.original.account}
+          accountId={row.original.account_id}
+        />
+      )
+    }
   },
   {
     id: "actions",

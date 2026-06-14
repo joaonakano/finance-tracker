@@ -35,6 +35,7 @@ export const useUpdateCategory = (options?: {
             toast.success("Categoria atualizada")
             queryClient.invalidateQueries({ queryKey: ["categories", userId] })
             queryClient.invalidateQueries({ queryKey: ["category", userId, category.id] })
+            queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
             options?.onSuccess?.()
         },
         onError: () => {

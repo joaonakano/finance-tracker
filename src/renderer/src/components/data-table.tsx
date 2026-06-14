@@ -40,6 +40,7 @@ const FILTER_LABELS: Record<string, string> = {
   category: "categoria",
   amount: "valor",
   createdAt: "data de criação",
+  payee: "beneficiário"
 };
 
 export function DataTable<TData, TValue>({

@@ -33,6 +33,7 @@ export const useDeleteCategory = (options?: {
             toast.success("Categoria removida")
             queryClient.invalidateQueries({ queryKey: ["categories", userId] })
             queryClient.removeQueries({ queryKey: ["category", userId, id] })
+            queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
             options?.onSuccess?.()
         },
         onError: () => {

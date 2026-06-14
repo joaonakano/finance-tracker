@@ -33,6 +33,7 @@ export const useDeleteAccount = (options?: {
             toast.success("Conta removida")
             queryClient.invalidateQueries({ queryKey: ["accounts", userId] })
             queryClient.removeQueries({ queryKey: ["account", userId, id] })
+            queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
             options?.onSuccess?.()
         },
         onError: () => {

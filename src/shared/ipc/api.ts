@@ -2,15 +2,22 @@ import {
     Account,
     BulkDeleteAccountsInput,
     BulkDeleteCategoriesInput,
+    BulkDeleteTransactionsInput,
     Category,
     CreateAccountInput,
     CreateCategoryInput,
+    CreateTransactionInput,
     DeleteAccountInput,
     DeleteCategoryInput,
+    DeleteTransactionInput,
     GetAccountInput,
     GetCategoryInput,
+    GetTransactionInput,
+    GetTransactionsInput,
+    TransactionWithRelations,
     UpdateAccountInput,
-    UpdateCategoryInput
+    UpdateCategoryInput,
+    UpdateTransactionInput,
 } from "@shared/types"
 
 export interface Api {
@@ -22,13 +29,22 @@ export interface Api {
         delete(data: DeleteAccountInput): Promise<boolean>
         bulkDelete(data: BulkDeleteAccountsInput): Promise<number>
     },
-    
+
     categories: {
         getAll(user_id: string): Promise<Category[]>
         getById(data: GetCategoryInput): Promise<Category | undefined>
         create(data: CreateCategoryInput): Promise<Category>
         update(data: UpdateCategoryInput): Promise<Category | undefined>
         delete(data: DeleteCategoryInput): Promise<boolean>
-        bulkDelete(data: BulkDeleteCategoriesInput): Promise<number>       
+        bulkDelete(data: BulkDeleteCategoriesInput): Promise<number>
+    },
+
+    transactions: {
+        getAll(data: GetTransactionsInput): Promise<TransactionWithRelations[]>
+        getById(data: GetTransactionInput): Promise<TransactionWithRelations | undefined>
+        create(data: CreateTransactionInput): Promise<TransactionWithRelations | undefined>
+        update(data: UpdateTransactionInput): Promise<TransactionWithRelations | undefined>
+        delete(data: DeleteTransactionInput): Promise<boolean>
+        bulkDelete(data: BulkDeleteTransactionsInput): Promise<number>
     }
 }

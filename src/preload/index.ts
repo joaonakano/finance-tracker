@@ -31,7 +31,21 @@ const api: Api = {
       ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_DELETE, data),
     bulkDelete: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.CATEGORIES_BULK_DELETE, data),
-  }
+  },
+  transactions: {
+    getAll: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_GET_ALL, data),
+    getById: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_GET_BY_ID, data),
+    create: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_CREATE, data),
+    update: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_UPDATE, data),
+    delete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_DELETE, data),
+    bulkDelete: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_BULK_DELETE, data),
+  },
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

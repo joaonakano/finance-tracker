@@ -6,6 +6,7 @@ import { SignUpPage } from "@renderer/pages/auth/SignUp";
 import { NotFoundPage } from "@renderer/pages/auth/NotFound";
 import AccountsPage from "@renderer/pages/accounts/AccountsPage";
 import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
+import TransactionsPage from "@renderer/pages/transactions/TransactionsPage";
 
 export function RoutesApp() {
     return (
@@ -17,6 +18,7 @@ export function RoutesApp() {
                 <Route path="/" element={<Home />} />
                 <Route path="/accounts" element={<AccountsPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
+                <Route path="/transactions" element={<TransactionsPage />} />
             </Route>
 
             {/* Catch-all route */}

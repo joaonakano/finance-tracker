@@ -1,0 +1,219 @@
+TRANSACTIONS: COMO USAR
+
+Este projeto nao usa GET/POST do Next.js para transactions.
+O fluxo local e este:
+
+renderer React -> window.api.transactions -> preload -> ipcRenderer.invoke -> ipcMain.handle -> repository -> SQLite
+
+ENDPOINTS DISPONIVEIS
+
+1. getAll
+Usa para listar transacoes com filtros.
+
+Assinatura:
+window.api.transactions.getAll({
+    user_id,
+    account_id?,
+    start_date?,
+    end_date?,
+})
+
+Retorno:
+TransactionWithRelations[]
+
+2. getById
+Usa para buscar uma transacao especifica pelo id.
+
+Assinatura:
+window.api.transactions.getById({
+    id,
+    user_id,
+})
+
+Retorno:
+TransactionWithRelations | undefined
+
+3. create
+Usa para criar uma transacao.
+
+Assinatura:
+window.api.transactions.create({
+    user_id,
+    amount,
+    payee,
+    notes?,
+    date,
+    account_id,
+    category_id?,
+})
+
+Retorno:
+TransactionWithRelations | undefined
+
+4. update
+Usa para atualizar uma transacao existente.
+
+Assinatura:
+window.api.transactions.update({
+    id,
+    user_id,
+    amount,
+    payee,
+    notes?,
+    date,
+    account_id,
+    category_id?,
+})
+
+Retorno:
+TransactionWithRelations | undefined
+
+5. delete
+Usa para remover uma transacao pelo id.
+
+Assinatura:
+window.api.transactions.delete({
+    id,
+    user_id,
+})
+
+Retorno:
+boolean
+
+6. bulkDelete
+Usa para remover varias transacoes de uma vez.
+
+Assinatura:
+window.api.transactions.bulkDelete({
+    ids,
+    user_id,
+})
+
+Retorno:
+number
+
+TIPO PRINCIPAL
+
+Transaction:
+- id
+- amount
+- payee
+- notes
+- date
+- account_id
+- category_id
+
+TransactionWithRelations:
+- tudo da Transaction
+- account
+- category
+
+COMO USAR NO REACT
+
+1. Listar transacoes
+
+import { useGetTransactions } from "@/pages/transactions/api/use-get-transactions"
+
+const { transactions, isLoading, error } = useGetTransactions({
+    account_id: "conta-id-opcional",
+    start_date: "2026-01-01",
+    end_date: "2026-12-31",
+})
+
+2. Buscar uma transacao por id
+
+import { useGetTransaction } from "@/pages/transactions/api/use-get-transaction"
+
+const { transaction, isLoading, error } = useGetTransaction(transactionId)
+
+3. Criar
+
+import { useCreateTransaction } from "@/pages/transactions/api/use-create-transaction"
+
+const createTransaction = useCreateTransaction({
+    onSuccess: () => {
+        // fechar sheet, limpar formulario, etc
+    }
+})
+
+createTransaction.mutate({
+    amount: 120,
+    payee: "Mercado",
+    notes: "Compra do mes",
+    date: "2026-06-13",
+    account_id: "account-id",
+    category_id: "category-id-opcional",
+})
+
+4. Atualizar
+
+import { useUpdateTransaction } from "@/pages/transactions/api/use-update-transaction"
+
+const updateTransaction = useUpdateTransaction({
+    onSuccess: () => {
+        // fechar sheet, atualizar lista
+    }
+})
+
+updateTransaction.mutate({
+    id: "transaction-id",
+    amount: 150,
+    payee: "Mercado",
+    notes: "Atualizado",
+    date: "2026-06-13",
+    account_id: "account-id",
+    category_id: "category-id-opcional",
+})
+
+5. Excluir
+
+import { useDeleteTransaction } from "@/pages/transactions/api/use-delete-transaction"
+
+const deleteTransaction = useDeleteTransaction({
+    onSuccess: () => {
+        // fechar modal/sheet
+    }
+})
+
+deleteTransaction.mutate({
+    id: "transaction-id",
+})
+
+6. Excluir varias
+
+import { useBulkDeleteTransactions } from "@/pages/transactions/api/use-bulk-delete-transactions"
+
+const bulkDeleteTransactions = useBulkDeleteTransactions()
+
+bulkDeleteTransactions.mutate({
+    ids: ["id-1", "id-2", "id-3"],
+})
+
+REGRAS DE USO
+
+- useQuery para buscar/listar dados.
+- useMutation para criar, editar ou apagar.
+- Sempre passe `user_id` vindo do Clerk no renderer.
+- Para filtro de periodo, use `start_date` e `end_date`.
+- Para filtrar uma conta, use `account_id`.
+- O resultado de `getAll` ja vem com `account` e `category`, entao a tela nao precisa fazer join no front.
+
+EXEMPLO DE FLUXO
+
+1. Usuario abre a tela.
+2. `useGetTransactions` busca a lista.
+3. Usuario clica em editar.
+4. `useGetTransaction(id)` carrega os dados da transacao.
+5. `useUpdateTransaction` salva as alteracoes.
+6. `useDeleteTransaction` remove uma transacao.
+7. `useBulkDeleteTransactions` remove varias selecoes.
+
+ARQUIVOS PRINCIPAIS
+
+- src/shared/types/entities/transaction.ts
+- src/shared/ipc/api.ts
+- src/shared/ipc/channels.ts
+- src/preload/index.ts
+- src/main/repositories/transaction.repository.ts
+- src/main/ipc/transaction.handlers.ts
+- src/renderer/src/pages/transactions/api/*

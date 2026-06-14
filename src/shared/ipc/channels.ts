@@ -12,4 +12,11 @@ export const IPC_CHANNELS = {
     CATEGORIES_UPDATE: 'categories:update',
     CATEGORIES_DELETE: 'categories:delete',
     CATEGORIES_BULK_DELETE: 'categories:bulkDelete',
+
+    TRANSACTIONS_GET_ALL: 'transactions:getAll',
+    TRANSACTIONS_GET_BY_ID: 'transactions:getById',
+    TRANSACTIONS_CREATE: 'transactions:create',
+    TRANSACTIONS_UPDATE: 'transactions:update',
+    TRANSACTIONS_DELETE: 'transactions:delete',
+    TRANSACTIONS_BULK_DELETE: 'transactions:bulkDelete',
 }

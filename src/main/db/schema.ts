@@ -15,5 +15,25 @@ export function setupSchema() {
             name TEXT NOT NULL,
             plaid_id TEXT
         );
+
+        CREATE TABLE IF NOT EXISTS transactions (
+            id TEXT PRIMARY KEY,
+            
+            amount INTEGER NOT NULL,
+            payee TEXT NOT NULL,
+            notes TEXT,
+            date TEXT NOT NULL,
+            
+            account_id TEXT NOT NULL,
+            category_id TEXT,
+
+            FOREIGN KEY (account_id)
+                REFERENCES accounts(id)
+            ON DELETE CASCADE,
+
+            FOREIGN KEY (category_id)
+                REFERENCES categories(id)
+            ON DELETE SET NULL
+        );
     `)
 }

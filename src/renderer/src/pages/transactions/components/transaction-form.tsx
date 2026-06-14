@@ -12,6 +12,8 @@ import { useCreateAccount } from "@/pages/accounts/api/use-create-account";
 import { useCreateCategory } from "@/pages/categories/api/use-create-category";
 import { DatePicker } from "@renderer/components/date-picker";
 import { Textarea } from "@renderer/components/ui/textarea";
+import { AmountInput } from "@renderer/components/amount-input";
+import { convertAmountToMiliunits } from "@renderer/lib/utils";
 
 export type TransactionFormValues = {
     amount: number
@@ -100,14 +102,17 @@ export const TransactionForm = ({
         event.preventDefault()
 
         const trimmedPayee = payee.trim()
+
         const numericAmount = parseFloat(amount)
 
-        if (!trimmedPayee || isNaN(numericAmount) || !accountId) {
+        const amountInMiliunits = convertAmountToMiliunits(numericAmount)
+
+        if (!trimmedPayee || isNaN(amountInMiliunits) || !accountId) {
             return
         }
 
         onSubmit({
-            amount: numericAmount,
+            amount: amountInMiliunits,
             payee: trimmedPayee,
             notes: notes.trim() || null,
             date,
@@ -122,31 +127,27 @@ export const TransactionForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Data</span>
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Data</span>
                 <DatePicker
                     value={parsedDate}
                     onChange={(day) => setDate(day ? format(day, "yyyy-MM-dd") : "")}
                     disabled={disabled}
                 />
-            </label>
+            </div>
 
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Valor</span>
-                <Input
-                    disabled={disabled}
-                    type="number"
-                    step="0.01"
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Valor</span>
+                <AmountInput
                     value={amount}
-                    onChange={(event) => setAmount(event.target.value)}
+                    onChange={(value) => setAmount(value ?? "")}
                     placeholder="Valor da transação"
-                    className="font-normal"
-                    required
+                    disabled={disabled}
                 />
-            </label>
-
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Beneficiário</span>
+            </div>
+            
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Beneficiário</span>
                 <Input
                     disabled={disabled}
                     value={payee}
@@ -155,10 +156,10 @@ export const TransactionForm = ({
                     className="font-normal"
                     required
                 />
-            </label>
+            </div>
 
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Observações</span>
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Observações</span>
                 <Textarea
                     disabled={disabled}
                     value={notes}
@@ -166,10 +167,10 @@ export const TransactionForm = ({
                     className="font-normal"
                     placeholder="Notas opcionais"
                 />
-            </label>
+            </div>
 
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Conta</span>
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Conta</span>
                 <Select
                     placeholder="Selecionar conta"
                     options={accountOptions}
@@ -178,10 +179,10 @@ export const TransactionForm = ({
                     onCreate={handleCreateAccount}
                     disabled={disabled}
                 />
-            </label>
+            </div>
 
-            <label className="block space-y-1.5 text-sm font-medium">
-                <span>Categoria</span>
+            <div className="block space-y-1.5 text-sm font-medium">
+                <span className="text-muted-foreground">Categoria</span>
                 <Select
                     placeholder="Sem categoria"
                     options={categoryOptions}
@@ -190,7 +191,7 @@ export const TransactionForm = ({
                     onCreate={handleCreateCategory}
                     disabled={disabled}
                 />
-            </label>
+            </div>
 
             <Button
                 type="submit"

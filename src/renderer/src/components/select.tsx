@@ -1,6 +1,8 @@
 import { useMemo } from "react"
 import CreatableSelect from "react-select/creatable"
 
+import { cn } from "@/lib/utils"
+
 type Option = {
   label: string
   value: string
@@ -13,6 +15,7 @@ type Props = {
   options?: Option[]
   disabled?: boolean
   placeholder?: string
+  className?: string
 }
 
 export const Select = ({
@@ -22,6 +25,7 @@ export const Select = ({
   onCreate,
   options = [],
   placeholder,
+  className,
 }: Props) => {
   const selectedValue = useMemo(() => {
     return options.find((option) => option.value === value) ?? null
@@ -34,7 +38,7 @@ export const Select = ({
   return (
     <CreatableSelect
       placeholder={placeholder}
-      className="text-sm"
+      className={cn("text-sm h-10", className)}
       classNamePrefix="select"
       value={selectedValue}
       onChange={handleChange}
@@ -45,64 +49,10 @@ export const Select = ({
       noOptionsMessage={() => "Nenhum item encontrado"}
       formatCreateLabel={(input) => `Criar "${input}"`}
       styles={{
-        control: (base, state) => ({
+        control: (base) => ({
           ...base,
-          minHeight: "2rem",
-          height: "2rem",
-          borderRadius: "0.5rem",
-          borderColor: state.isFocused ? "var(--ring)" : "var(--border)",
-          boxShadow: state.isFocused ? "0 0 0 3px var(--ring) / 0.5" : "none",
-          backgroundColor: "var(--background)",
-          "&:hover": {
-            borderColor: "var(--border)",
-          },
-        }),
-        valueContainer: (base) => ({
-          ...base,
-          padding: "0 0.5rem",
-        }),
-        input: (base) => ({
-          ...base,
-          margin: 0,
-          padding: 0,
-        }),
-        singleValue: (base) => ({
-          ...base,
-          color: "var(--foreground)",
-          fontWeight: 400, 
-        }),
-        placeholder: (base) => ({
-          ...base,
-          color: "var(--muted-foreground)",
-          fontWeight: 400,
-        }),
-        indicatorsContainer: (base) => ({
-          ...base,
-          height: "2rem",
-        }),
-        menu: (base) => ({
-          ...base,
-          backgroundColor: "var(--popover)",
-          border: "1px solid var(--border)",
-          borderRadius: "0.5rem",
-          boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-        }),
-        option: (base, state) => ({
-          ...base,
-          backgroundColor: state.isSelected
-            ? "var(--primary)"
-            : state.isFocused
-              ? "var(--accent)"
-              : "transparent",
-          color: state.isSelected
-            ? "var(--primary-foreground)"
-            : "var(--foreground)",
-          cursor: "pointer",
-        }),
-        noOptionsMessage: (base) => ({
-          ...base,
-          color: "var(--muted-foreground)",
-        }),
+          borderColor: "#e2e8f0"
+        })
       }}
     />
   )

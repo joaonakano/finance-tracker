@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Actions } from "./actions"
 import { format } from "date-fns"
+import { convertAmountFromMiliunits } from "@renderer/lib/utils"
 
 export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
@@ -57,13 +58,15 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
       )
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amountInMiliunits = parseFloat(row.getValue("amount"))
+      const amountToNormalCurrency = convertAmountFromMiliunits(amountInMiliunits)
+
       const formatted = new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
-      }).format(amount)
+      }).format(amountToNormalCurrency)
 
-      return <span className={amount < 0 ? "text-red-500" : ""}>{formatted}</span>
+      return <span className={amountToNormalCurrency < 0 ? "text-red-500" : ""}>R$ {amountToNormalCurrency}</span>
     },
   },
   {

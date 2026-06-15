@@ -1,8 +1,6 @@
-import { useRef, useState } from "react";
-
+import { useRef, useState, useCallback, useMemo } from "react";
 import { useGetAccounts } from "../api/use-get-accounts";
 import { useCreateAccount } from "../api/use-create-account";
-
 import {
     Dialog,
     DialogContent,
@@ -11,76 +9,111 @@ import {
     DialogDescription,
     DialogFooter
 } from "@/components/ui/dialog"
-
 import { Button } from "@/components/ui/button"
 import { Select } from "@renderer/components/select";
 
-export const useSelectAccount = (): [() => React.ReactElement, () => Promise<unknown>] => {
+// ✅ Componente fora do hook — identidade estável, sem remontagem a cada render
+type AccountDialogProps = {
+    open: boolean
+    onCancel: () => void
+    onConfirm: () => void
+    selectValue: string | undefined
+    onSelect: (value: string | undefined) => void
+    accountOptions: { label: string; value: string }[]
+    isLoading: boolean
+    isPending: boolean
+}
+
+const AccountDialog = ({
+    open,
+    onCancel,
+    onConfirm,
+    selectValue,
+    onSelect,
+    accountOptions,
+    isLoading,
+    isPending,
+}: AccountDialogProps) => (
+    <Dialog open={open} onOpenChange={onCancel}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Selecione uma Conta</DialogTitle>
+                <DialogDescription>
+                    Selecione uma conta para continuar.
+                </DialogDescription>
+            </DialogHeader>
+            <Select
+                placeholder="Selecione uma conta"
+                options={accountOptions}
+                onCreate={(name) => onSelect(name)}
+                onChange={onSelect}
+                value={selectValue}
+                disabled={isLoading || isPending}
+            />
+            <DialogFooter className="pt-2">
+                <Button onClick={onCancel} variant="outline">
+                    Cancelar
+                </Button>
+                <Button onClick={onConfirm}>
+                    Confirmar
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
+
+export const useSelectAccount = (): [React.ReactElement, () => Promise<unknown>] => {
     const accountQuery = useGetAccounts()
     const accountMutation = useCreateAccount()
-    const onCreateAccount = (name: string) => accountMutation.mutate({
-        name
-    })
-
-    const accountOptions = (accountQuery.accounts ?? []).map((account) => ({
-        label: account.name,
-        value: account.id,
-    }))
-    
+ 
+    const onCreateAccount = useCallback((name: string) => {
+        accountMutation.mutate({ name })
+    }, [accountMutation])
+ 
+    const accountOptions = useMemo(
+        () => (accountQuery.accounts ?? []).map((account) => ({
+            label: account.name,
+            value: account.id,
+        })),
+        [accountQuery.accounts]
+    )
+ 
     const [promise, setPromise] = useState<{ resolve: (value: string | undefined) => void } | null>(null)
-
-    const selectValue = useRef<string>()
-
-    const confirm = () => new Promise((resolve) => {
+    const [selectValue, setSelectValue] = useState<string | undefined>(undefined)
+ 
+    const confirm = useCallback(() => new Promise((resolve) => {
+        setSelectValue(undefined)
         setPromise({ resolve })
-    })
-
-    const handleClose = () => {
+    }), [])
+ 
+    const handleClose = useCallback(() => {
         setPromise(null)
-    }
-
-    const handleConfirm = () => {
-        promise?.resolve(selectValue.current)
+        setSelectValue(undefined)
+    }, [])
+ 
+    const handleConfirm = useCallback(() => {
+        promise?.resolve(selectValue)
         handleClose()
-    }
-
-    const handleCancel = () => {
+    }, [promise, selectValue, handleClose])
+ 
+    const handleCancel = useCallback(() => {
         promise?.resolve(undefined)
         handleClose()
-    }
-
-    const ConfirmationDialog = () => (
-        <Dialog open={promise !== null} onOpenChange={handleCancel}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>
-                        Selecione uma Conta
-                    </DialogTitle>
-                    <DialogDescription>
-                        Selecione uma conta para continuar.
-                    </DialogDescription>
-                </DialogHeader>
-                <Select
-                    placeholder="Select an account"
-                    options={accountOptions}
-                    onCreate={onCreateAccount}
-                    onChange={(value) => selectValue.current = value}
-                    disabled={accountQuery.isLoading || accountMutation.isPending}
-                />
-                <DialogFooter className="pt-2">
-                    <Button
-                        onClick={handleCancel}
-                        variant="outline"
-                    >
-                        Cancelar
-                    </Button>
-                    <Button onClick={handleConfirm}>
-                        Confirmar
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+    }, [promise, handleClose])
+ 
+    // ✅ JSX element direto — React atualiza props no lugar, sem remontar
+    const dialogElement = (
+        <AccountDialog
+            open={promise !== null}
+            onCancel={handleCancel}
+            onConfirm={handleConfirm}
+            selectValue={selectValue}
+            onSelect={setSelectValue}
+            accountOptions={accountOptions}
+            isLoading={accountQuery.isLoading}
+            isPending={accountMutation.isPending}
+        />
     )
-
-    return [ConfirmationDialog, confirm]
+ 
+    return [dialogElement, confirm]
 }

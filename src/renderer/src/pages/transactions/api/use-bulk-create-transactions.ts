@@ -3,7 +3,7 @@ import { useAuth } from "@clerk/react"
 import { BulkCreateTransactionItem } from "@shared/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-type BulkCreateValues = {
+export type BulkCreateValues = {
     transactions: BulkCreateTransactionItem[]
 }
 

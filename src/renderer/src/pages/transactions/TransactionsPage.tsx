@@ -1,6 +1,5 @@
 import { DashboardLayout } from "@/pages/dashboard/components/layout";
-import { BulkCreateTransactionsInput } from "@shared/types"
-
+import { BulkCreateTransactionItem } from "@shared/types"
 
 import { Button } from "@renderer/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
@@ -31,16 +30,16 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 export default function TransactionsPage() {
-    const [AccountDialog, confirm] = useSelectAccount()
+    // ✅ accountDialog agora é ReactElement, não uma função-componente
+    const [accountDialog, confirm] = useSelectAccount()
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST)
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS)
-
+ 
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
-        console.log(results)
         setImportResults(results)
         setVariant(VARIANTS.IMPORT)
     }
-
+ 
     const onCancelImport = () => {
         setImportResults(INITIAL_IMPORT_RESULTS)
         setVariant(VARIANTS.LIST)
@@ -50,27 +49,22 @@ export default function TransactionsPage() {
     const createTransactions = useBulkCreateTransactions()
     const deleteTransactions = useBulkDeleteTransactions()
     const { transactions, isLoading, error } = useGetTransactions()
-
-    const isDisabled = isLoading
-
-    const onSubmitImport = async (
-        values
-    ): Promise<BulkCreateTransactionsInput> => {
+ 
+    const onSubmitImport = async (values: BulkCreateTransactionItem[]): Promise<void> => {
         const accountId = await confirm()
-
+ 
         if (!accountId) {
-            return toast.error("Selecione uma conta para continuar.")
+            toast.error("Selecione uma conta para continuar.")
+            return
         }
-
-        const data = values.map((value) => ({
+ 
+        const data: BulkCreateTransactionItem[] = values.map((value) => ({
             ...value,
-            accountId: accountId as string
+            account_id: accountId as string
         }))
-
-        createTransactions.mutate(data, {
-            onSuccess: () => {
-                onCancelImport()
-            }
+ 
+        createTransactions.mutate({ transactions: data }, {
+            onSuccess: () => onCancelImport()
         })
     }
     
@@ -95,13 +89,14 @@ export default function TransactionsPage() {
     if (variant === VARIANTS.IMPORT) {
         return (
             <>
-                <AccountDialog />
+                {/* ✅ Renderiza o elemento diretamente, sem chamar como componente */}
+                {accountDialog}
                 <DashboardLayout>
                     <ImportCard 
                         data={importResults.data}
                         onCancel={onCancelImport}
                         onSubmit={onSubmitImport}
-                        />
+                    />
                 </DashboardLayout>
             </>
         )
@@ -109,6 +104,8 @@ export default function TransactionsPage() {
     
     return (
         <DashboardLayout>
+            {/* ✅ Sempre presente na árvore — evita montar/desmontar ao trocar de variant */}
+            {accountDialog}
             <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
                 <Card>
                     <CardHeader className="flex flex-col gap-x-2 gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
@@ -122,10 +119,16 @@ export default function TransactionsPage() {
                         <UploadButton onUpload={onUpload} />
                     </CardHeader>
                     <CardContent>
-                        <DataTable onDelete={(row) => {
-                            const ids = row.map((r) => r.original.id)
-                            deleteTransactions.mutate({ ids })
-                        }} filterKey="payee" columns={columns} data={transactions} disabled={isDisabled} />
+                        <DataTable
+                            onDelete={(row) => {
+                                const ids = row.map((r) => r.original.id)
+                                deleteTransactions.mutate({ ids })
+                            }}
+                            filterKey="payee"
+                            columns={columns}
+                            data={transactions}
+                            disabled={isLoading}
+                        />
                     </CardContent>
                 </Card>
             </div>

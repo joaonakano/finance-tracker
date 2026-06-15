@@ -1,4 +1,5 @@
 import { DashboardLayout } from "@/pages/dashboard/components/layout";
+import { BulkCreateTransactionsInput } from "@shared/types"
 
 
 import { Button } from "@renderer/components/ui/button";
@@ -14,6 +15,9 @@ import { columns } from "./components/columns";
 import { useState } from "react";
 import { UploadButton } from "./components/upload-button";
 import { ImportCard } from "./components/import-card";
+import { useSelectAccount } from "../accounts/hooks/use-select-account";
+import { toast } from "sonner";
+import { useBulkCreateTransactions } from "./api/use-bulk-create-transactions";
 
 enum VARIANTS {
     LIST = 'LIST',
@@ -27,6 +31,7 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 export default function TransactionsPage() {
+    const [AccountDialog, confirm] = useSelectAccount()
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST)
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS)
 
@@ -42,10 +47,32 @@ export default function TransactionsPage() {
     }
     
     const newTransaction = useNewTransaction()
+    const createTransactions = useBulkCreateTransactions()
     const deleteTransactions = useBulkDeleteTransactions()
     const { transactions, isLoading, error } = useGetTransactions()
 
     const isDisabled = isLoading
+
+    const onSubmitImport = async (
+        values
+    ): Promise<BulkCreateTransactionsInput> => {
+        const accountId = await confirm()
+
+        if (!accountId) {
+            return toast.error("Selecione uma conta para continuar.")
+        }
+
+        const data = values.map((value) => ({
+            ...value,
+            accountId: accountId as string
+        }))
+
+        createTransactions.mutate(data, {
+            onSuccess: () => {
+                onCancelImport()
+            }
+        })
+    }
     
     if (isLoading) {
         return (
@@ -67,13 +94,16 @@ export default function TransactionsPage() {
     
     if (variant === VARIANTS.IMPORT) {
         return (
-            <DashboardLayout>
-                <ImportCard 
-                    data={importResults.data}
-                    onCancel={onCancelImport}
-                    onSubmit={() => {}}
-                />
-            </DashboardLayout>
+            <>
+                <AccountDialog />
+                <DashboardLayout>
+                    <ImportCard 
+                        data={importResults.data}
+                        onCancel={onCancelImport}
+                        onSubmit={onSubmitImport}
+                        />
+                </DashboardLayout>
+            </>
         )
     }
     

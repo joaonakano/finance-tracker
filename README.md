@@ -1,4 +1,4 @@
-# Projeto de Extensão: Finance Beam
+# Projeto de Extensão: Finance Beam 2.0
 
 A proposta do presente projeto é a entrega final de software para auxiliar os processos internos da empresa Faça a Festa, de Guarapuava - PR, como objetivo avaliativo da disciplina de Extensão do 7° Período do curso de Engenharia de Software, Centro Universitário Campo Real.
 

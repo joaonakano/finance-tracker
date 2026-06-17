@@ -1,0 +1,172 @@
+================================================================================
+                    USO DO HOOK useGetSummary
+================================================================================
+
+O hook useGetSummary obtem o resumo financeiro de um periodo, incluindo:
+- Dados do periodo atual (income, expenses, remaining)
+- Dados do periodo anterior (mesma duracao) para comparacao
+- Variacao percentual entre periodos (income, expenses, remaining)
+- Top 3 categorias de gastos + agregado "Other"
+- Todos os dias do intervalo preenchidos (dias sem transacao = zero)
+
+================================================================================
+                              COMO USAR
+================================================================================
+
+1. IMPORTE o hook no seu componente:
+
+    import { useGetSummary } from "./api/use-get-summary"
+
+
+2. CHAME o hook passando filtros opcionais:
+
+    const { summary, isLoading, error } = useGetSummary({
+        from: "2026-05-17",    // opcional (default: 30 dias atras)
+        to: "2026-06-17",      // opcional (default: hoje)
+        account_id: "abc123",  // opcional (filtra por conta especifica)
+    })
+
+
+3. TRATE os estados de carregamento e erro:
+
+    if (isLoading) return <div>Carregando resumo...</div>
+    if (error) return <div>Erro: {error.message}</div>
+    if (!summary) return <div>Nenhum dado encontrado.</div>
+
+
+4. RENDERIZE os dados:
+
+    summary.currentPeriod.income     // receitas do periodo atual (USD)
+    summary.currentPeriod.expenses   // despesas do periodo atual (USD, negativo)
+    summary.currentPeriod.remaining  // saldo do periodo atual (USD)
+    summary.lastPeriod.income        // receitas do periodo anterior (USD)
+    summary.lastPeriod.expenses      // despesas do periodo anterior (USD)
+    summary.lastPeriod.remaining     // saldo do periodo anterior (USD)
+    summary.incomeChange             // variacao % das receitas
+    summary.expensesChange           // variacao % das despesas
+    summary.remainingChange          // variacao % do saldo
+    summary.categories               // top 3 categorias + "Other"
+    summary.days                     // array com todos os dias do intervalo
+
+
+================================================================================
+                     EXEMPLO DE OUTPUT (JSON)
+================================================================================
+
+Cenario: usuario "user_abc", periodo 2026-05-17 a 2026-06-17 (32 dias),
+sem filtro de conta.
+
+{
+  "currentPeriod": {
+    "income": 5200.00,
+    "expenses": -3150.50,
+    "remaining": 2049.50
+  },
+  "lastPeriod": {
+    "income": 4800.00,
+    "expenses": -2700.00,
+    "remaining": 2100.00
+  },
+  "incomeChange": 8.33,
+  "expensesChange": 16.69,
+  "remainingChange": -2.40,
+  "categories": [
+    {
+      "name": "Alimentacao",
+      "value": 1200.00
+    },
+    {
+      "name": "Transporte",
+      "value": 850.00
+    },
+    {
+      "name": "Lazer",
+      "value": 600.50
+    },
+    {
+      "name": "Other",
+      "value": 500.00
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-05-17",
+      "income": 150.00,
+      "expenses": 80.00
+    },
+    {
+      "date": "2026-05-18",
+      "income": 200.00,
+      "expenses": 120.00
+    },
+    {
+      "date": "2026-05-19",
+      "income": 0,
+      "expenses": 0
+    },
+    "... mais 29 dias ate 2026-06-17 ..."
+  ]
+}
+
+
+================================================================================
+                       INTERPRETACAO DO EXEMPLO
+================================================================================
+
+- currentPeriod: No periodo 17/05 a 17/06, houve $5.200,00 de receitas,
+  $3.150,50 de despesas, resultando em saldo positivo de $2.049,50.
+
+- lastPeriod: No periodo anterior (16/04 a 16/05), receitas foram $4.800,00
+  e despesas $2.700,00.
+
+- incomeChange +8.33%: As receitas aumentaram 8.33% em relacao ao periodo
+  anterior.
+
+- expensesChange +16.69%: As despesas aumentaram 16.69% (valor positivo
+  indica que as despesas subiram, pois expenses sao negativos e o calculo
+  eh (current - previous) / previous).
+
+- remainingChange -2.40%: O saldo caiu 2.40% em relacao ao periodo anterior.
+
+- categories: Top 3 categorias de gasto (Alimentacao, Transporte, Lazer)
+  mais "Other" que agrega o restante. Valores absolutos (positivos).
+
+- days: Array de 32 dias (um por dia do intervalo). Dias sem transacao
+  aparecem com income: 0 e expenses: 0. O campo expenses nos dias usa
+  valor absoluto (positivo).
+
+
+================================================================================
+                         TODOS OS VALORES EM USD
+================================================================================
+
+O hook ja converte automaticamente de milliunits (formato interno do banco)
+para USD. Nao eh necessario fazer conversao manual.
+
+
+================================================================================
+                    ARQUITETURA (FLUXO DE DADOS)
+================================================================================
+
+  React Component
+       |
+       | useGetSummary({ from, to, account_id })
+       v
+  use-get-summary.ts (hook)
+       |
+       | window.api.summary.getByDate({ user_id, from, to, account_id })
+       v
+  preload/index.ts (bridge IPC)
+       |
+       | ipcRenderer.invoke('summary:getByDate')
+       v
+  summary.handlers.ts (main process)
+       |
+       | SummaryRepository.getByDate(data)
+       v
+  summary.repository.ts (main process)
+       |
+       | SQL queries (better-sqlite3)
+       | + calculos (date-fns, fillMissingDays, calculatePercentageChange)
+       v
+  SQLite database (finance.db)

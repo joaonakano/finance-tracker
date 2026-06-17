@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/pages/dashboard/components/layout";
 
 import { useNewAccount } from "@renderer/pages/accounts/hooks/use-new-account";
 import { useGetAccounts } from "@renderer/pages/accounts/api/use-get-accounts";
@@ -12,6 +11,7 @@ import { columns } from "@/pages/accounts/components/columns";
 import { DataTable } from "@renderer/components/data-table";
 import { Skeleton } from "@renderer/components/ui/skeleton";
 import { useBulkDeleteAccounts } from "./api/use-bulk-delete-accounts";
+import { DashboardLayout } from "@renderer/components/layout";
 
 export default function AccountsPage() {
     const newAccount = useNewAccount()

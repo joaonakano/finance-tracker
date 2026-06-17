@@ -1,4 +1,4 @@
-import { DashboardLayout } from "@/pages/dashboard/components/layout";
+
 import { BulkCreateTransactionItem } from "@shared/types"
 
 import { Button } from "@renderer/components/ui/button";
@@ -17,6 +17,7 @@ import { ImportCard } from "./components/import-card";
 import { useSelectAccount } from "../accounts/hooks/use-select-account";
 import { toast } from "sonner";
 import { useBulkCreateTransactions } from "./api/use-bulk-create-transactions";
+import { DashboardLayout } from "@renderer/components/layout";
 
 enum VARIANTS {
     LIST = 'LIST',
@@ -30,7 +31,6 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 export default function TransactionsPage() {
-    // ✅ accountDialog agora é ReactElement, não uma função-componente
     const [accountDialog, confirm] = useSelectAccount()
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST)
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS)
@@ -89,7 +89,6 @@ export default function TransactionsPage() {
     if (variant === VARIANTS.IMPORT) {
         return (
             <>
-                {/* ✅ Renderiza o elemento diretamente, sem chamar como componente */}
                 {accountDialog}
                 <DashboardLayout>
                     <ImportCard 
@@ -104,7 +103,6 @@ export default function TransactionsPage() {
     
     return (
         <DashboardLayout>
-            {/* ✅ Sempre presente na árvore — evita montar/desmontar ao trocar de variant */}
             {accountDialog}
             <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
                 <Card>

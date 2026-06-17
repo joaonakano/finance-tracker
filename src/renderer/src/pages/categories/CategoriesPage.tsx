@@ -1,5 +1,3 @@
-import { DashboardLayout } from "@/pages/dashboard/components/layout";
-
 
 import { Button } from "@renderer/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card";
@@ -12,6 +10,7 @@ import { useNewCategory } from "./hooks/use-new-category";
 import { useBulkDeleteCategories } from "./api/use-bulk-delete-categories";
 import { useGetCategories } from "./api/use-get-categories";
 import { columns } from "./components/columns";
+import { DashboardLayout } from "@renderer/components/layout";
 
 
 

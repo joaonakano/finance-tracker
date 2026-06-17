@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router";
 import { ProtectedRoute } from "./ProtectedRoute";
-import Home from "@renderer/pages/dashboard/Home";
 import { SignInPage } from "@renderer/pages/auth/SignIn";
 import { SignUpPage } from "@renderer/pages/auth/SignUp";
 import { NotFoundPage } from "@renderer/pages/auth/NotFound";
 import AccountsPage from "@renderer/pages/accounts/AccountsPage";
 import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
 import TransactionsPage from "@renderer/pages/transactions/TransactionsPage";
+import DashboardPage from "@renderer/pages/summary/DashboardPage";
 
 export function RoutesApp() {
     return (
@@ -15,7 +15,7 @@ export function RoutesApp() {
             <Route path="/sign-up" element={<SignUpPage />} />
 
             <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<DashboardPage />} />
                 <Route path="/accounts" element={<AccountsPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/transactions" element={<TransactionsPage />} />

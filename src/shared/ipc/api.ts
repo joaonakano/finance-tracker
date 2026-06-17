@@ -12,10 +12,11 @@ import {
     DeleteCategoryInput,
     DeleteTransactionInput,
     GetAccountInput,
-    GetAllInput,
     GetCategoryInput,
     GetTransactionInput,
     GetTransactionsInput,
+    SummaryInput,
+    SummaryOutput,
     TransactionWithRelations,
     UpdateAccountInput,
     UpdateCategoryInput,
@@ -52,6 +53,6 @@ export interface Api {
     },
 
     summary: {
-        getByDate(data: GetAllInput)
+        getByDate(data: SummaryInput): Promise<SummaryOutput>
     }
 }

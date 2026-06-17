@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { setupSchema } from './db/schema'
 import { registerAccountHandlers } from './ipc/account.handlers'
 import { registerCategoryHandlers } from './ipc/category.handlers'
+import { registerSummaryHandlers } from './ipc/summary.handlers'
 import { registerTransactionHandlers } from './ipc/transaction.handlers'
 
 function createWindow(): void {
@@ -47,6 +48,7 @@ app.whenReady().then(() => {
   registerAccountHandlers()
   registerCategoryHandlers()
   registerTransactionHandlers()
+  registerSummaryHandlers()
 
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')

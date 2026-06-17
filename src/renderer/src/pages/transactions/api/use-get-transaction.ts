@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/react"
+import { convertAmountFromMiliunits } from "@renderer/lib/utils"
 import { TransactionWithRelations } from "@shared/types"
 import { useQuery } from "@tanstack/react-query"
 
@@ -27,7 +28,12 @@ export const useGetTransaction = (id?: string): UseGetTransactionResult => {
                 throw new Error("Transação não encontrada")
             }
 
-            return response
+            console.log(response)
+
+            return {
+                ...response,
+                amount: convertAmountFromMiliunits(response.amount)
+            }
         },
         enabled: !!userId && isLoaded && !!id,
     })

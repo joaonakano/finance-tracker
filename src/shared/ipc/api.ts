@@ -12,6 +12,7 @@ import {
     DeleteCategoryInput,
     DeleteTransactionInput,
     GetAccountInput,
+    GetAllInput,
     GetCategoryInput,
     GetTransactionInput,
     GetTransactionsInput,
@@ -48,5 +49,9 @@ export interface Api {
         delete(data: DeleteTransactionInput): Promise<boolean>
         bulkDelete(data: BulkDeleteTransactionsInput): Promise<number>
         bulkCreate(data: BulkCreateTransactionsInput): Promise<number>
+    },
+
+    summary: {
+        getByDate(data: GetAllInput)
     }
 }

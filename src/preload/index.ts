@@ -48,6 +48,10 @@ const api: Api = {
     bulkCreate: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_BULK_CREATE, data),
   },
+  summary: {
+    getByDate: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.SUMMARY_GET_BY_DATE, data),
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -1,34 +1,48 @@
-# finance-tracker
+# Projeto de Extensão: Finance Beam 2.0
 
-An Electron application with React and TypeScript
+A proposta do presente projeto é a entrega final de software para auxiliar os processos internos da empresa Faça a Festa, de Guarapuava - PR, como objetivo avaliativo da disciplina de Extensão do 7° Período do curso de Engenharia de Software, Centro Universitário Campo Real.
 
-## Recommended IDE Setup
+A ideia central é auxiliar no controle de gastos da empresa através de software instalado localmente nas máquinas do cliente. O controle de gastos será feito através da criação e acompanhamento do módulo de Contas a Pagar.
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+## Requisitos 
 
-## Project Setup
+- [Node.js](https://nodejs.org/) versão 25.9.0 ou inferior. **Versões mais recentes** do Node.js não apresentam compatibilidade total com a biblioteca better-sqlite3
+- NPM versão 9 ou superior
+- Git
 
-### Install
+## Instalação
 
+Se você é desenvolvedor e planeja executar o código-fonte do projeto, é necessária a instalação prévia de todos os pré-requisitos. Siga as instruções:
+
+1. Clone o Repositório:
 ```bash
-$ npm install
+git clone https://github.com/joaonakano/extensao-finance-beam.git
+cd extensao-finance-beam
 ```
 
-### Development
-
+2. Instale as Dependências:
 ```bash
-$ npm run dev
+npm install
 ```
 
-### Build
+3. Reconstrua os Módulos do Electron (se aplicável):
+```bash
+npx electron-rebuild
+```
+
+## Executando o Programa
 
 ```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
+npm run dev
 ```
+
+## Stacks Utilizadas
+
+- **Electron** - aplicativo desktop
+- **React + TypeScript** - frontend UI
+- **Vite** - framework de build para aplicativo instalado
+- **SQLite (better-sqlite3)** - banco de dados local
+- **Tailwind CSS** - estilização
+- **Shadcn** - UI modular
+- **Zod** - tratamento e validação
+- **TanStack** - navegação, gerenciamento de estados e cache

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { subDays, format } from "date-fns"
 import { formatDateRange } from "@renderer/lib/utils"
 import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
+import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 
 import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6"
 import { FaPiggyBank } from "react-icons/fa"
@@ -19,8 +20,13 @@ function defaultTo(): string {
 export const DataGrid = () => {   
     const [from, setFrom] = useState<string>(defaultFrom)
     const [to, setTo] = useState<string>(defaultTo)
+    const { accountId } = useAccountFilter()
 
-    const { data, isLoading, error } = useGetSummary({ from, to })
+    const { data, isLoading, error } = useGetSummary({
+        from,
+        to,
+        account_id: accountId !== "all" ? accountId : undefined,
+    })
 
     const dateRangeLabel = formatDateRange({ from, to })
 

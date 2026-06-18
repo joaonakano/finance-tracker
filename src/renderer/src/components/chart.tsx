@@ -85,10 +85,10 @@ export const Chart = ({ data = [] }: Props) => {
             </CardHeader>
             <CardContent>
                 {data.length === 0 ? (
-                    <div className="flex flex-col gap-y-4 item-center justify-center h-87.5 w-full">
+                    <div className="flex flex-col gap-y-4 items-center justify-center h-87.5 w-full">
                         <FileSearch className="size-6 text-muted-foreground" />
                         <p className="text-muted-foreground text-sm">
-                            No data for this period
+                            Sem dados para este período
                         </p>
                     </div>
                 ) : (

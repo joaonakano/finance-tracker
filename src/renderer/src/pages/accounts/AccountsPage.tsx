@@ -23,7 +23,7 @@ export default function AccountsPage() {
     
     if (isLoading) {
         return (
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
                 <Card>
                     <CardHeader>
                         <Skeleton className="h-8 w-48"/>
@@ -41,7 +41,7 @@ export default function AccountsPage() {
     
     return (
         <DashboardLayout>
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
                 <Card>
                     <CardHeader className="flex flex-col gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
                         <CardTitle className="text-xl font-bold line-clamp-1">

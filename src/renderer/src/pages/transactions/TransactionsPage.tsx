@@ -15,6 +15,7 @@ import { useState } from "react";
 import { UploadButton } from "./components/upload-button";
 import { ImportCard } from "./components/import-card";
 import { useSelectAccount } from "../accounts/hooks/use-select-account";
+import { useAccountFilter } from "@renderer/hooks/use-account-filter";
 import { toast } from "sonner";
 import { useBulkCreateTransactions } from "./api/use-bulk-create-transactions";
 import { DashboardLayout } from "@renderer/components/layout";
@@ -48,7 +49,10 @@ export default function TransactionsPage() {
     const newTransaction = useNewTransaction()
     const createTransactions = useBulkCreateTransactions()
     const deleteTransactions = useBulkDeleteTransactions()
-    const { transactions, isLoading, error } = useGetTransactions()
+    const { accountId: filterAccountId } = useAccountFilter()
+    const { transactions, isLoading, error } = useGetTransactions({
+        account_id: filterAccountId !== "all" ? filterAccountId : undefined,
+    })
  
     const onSubmitImport = async (values: BulkCreateTransactionItem[]): Promise<void> => {
         const accountId = await confirm()
@@ -70,7 +74,7 @@ export default function TransactionsPage() {
     
     if (isLoading) {
         return (
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
                 <Card>
                     <CardHeader>
                         <Skeleton className="h-8 w-48"/>
@@ -104,7 +108,7 @@ export default function TransactionsPage() {
     return (
         <DashboardLayout>
             {accountDialog}
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
                 <Card>
                     <CardHeader className="flex flex-col gap-x-2 gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
                         <CardTitle className="text-xl font-bold line-clamp-1">

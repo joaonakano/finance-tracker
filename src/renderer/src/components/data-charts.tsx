@@ -1,9 +1,14 @@
 import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
+import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 import { Chart, ChartLoading } from "./chart"
 import { SpendingPie, SpendingPieLoading } from "./spending-pie"
 
 export const DataCharts = () => {
-    const { data, isLoading, error } = useGetSummary()
+    const { accountId } = useAccountFilter()
+
+    const { data, isLoading, error } = useGetSummary({
+        account_id: accountId !== "all" ? accountId : undefined,
+    })
 
     if (isLoading) {
         return (

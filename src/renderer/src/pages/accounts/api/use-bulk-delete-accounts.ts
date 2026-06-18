@@ -26,6 +26,7 @@ export const useBulkDeleteAccounts = (options?: {
         onSuccess: () => {
             toast.success("Contas removidas")
             queryClient.invalidateQueries({ queryKey: ["accounts", userId] })
+            queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.()
         },
         onError: (error) => {

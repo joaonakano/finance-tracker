@@ -34,6 +34,7 @@ export const useDeleteAccount = (options?: {
             queryClient.invalidateQueries({ queryKey: ["accounts", userId] })
             queryClient.removeQueries({ queryKey: ["account", userId, id] })
             queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
+            queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.()
         },
         onError: () => {

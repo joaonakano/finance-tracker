@@ -130,7 +130,9 @@ export class SummaryRepository {
                 SUM(ABS(t.amount)) AS value
             FROM transactions t
             INNER JOIN accounts a ON t.account_id = a.id
-            INNER JOIN categories c ON t.category_id = c.id
+            INNER JOIN categories c
+                ON t.category_id = c.id
+               AND c.user_id = a.user_id
             WHERE a.user_id = ?
               AND t.amount < 0
               AND t.date >= ?

@@ -1,3 +1,4 @@
+import { DataCharts } from "@renderer/components/data-charts";
 import { DataGrid } from "@renderer/components/data-grid";
 import { DashboardLayout } from "@renderer/components/layout";
 
@@ -6,6 +7,7 @@ export default function DashboardPage() {
         <DashboardLayout>
             <div className="max-x-screen-2xl mx-auto w-full pb-10 -mt-24">
                 <DataGrid />
+                <DataCharts />
             </div>
         </DashboardLayout>
     )

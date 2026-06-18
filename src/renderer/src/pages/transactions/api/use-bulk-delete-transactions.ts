@@ -26,6 +26,7 @@ export const useBulkDeleteTransactions = (options?: {
         onSuccess: () => {
             toast.success("Transacoes removidas")
             queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
+            queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.()
         },
         onError: () => {

@@ -27,6 +27,7 @@ export const useBulkCreateTransactions = (options?: {
         onSuccess: (count) => {
             toast.success(`${count} transações importadas`)
             queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
+            queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.(count)
         },
         onError: () => {

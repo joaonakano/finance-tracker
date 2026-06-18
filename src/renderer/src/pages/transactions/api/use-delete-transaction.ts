@@ -33,6 +33,7 @@ export const useDeleteTransaction = (options?: {
             toast.success("Transacao removida")
             queryClient.invalidateQueries({ queryKey: ["transactions", userId] })
             queryClient.removeQueries({ queryKey: ["transaction", userId, id] })
+            queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.()
         },
         onError: () => {

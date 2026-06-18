@@ -1,4 +1,3 @@
-
 import {
     Select,
     SelectContent,
@@ -12,7 +11,7 @@ import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 
 export const AccountFilter = () => {
     const { accountId, setAccountId } = useAccountFilter()
-    const { accounts, isLoading, error } = useGetAccounts()
+    const { accounts, isLoading } = useGetAccounts()
 
     return (
         <Select

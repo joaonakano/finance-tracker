@@ -1,12 +1,17 @@
+import { format } from "date-fns"
 import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
+import { useDateFilter } from "@renderer/hooks/use-date-filter"
 import { Chart, ChartLoading } from "./chart"
 import { SpendingPie, SpendingPieLoading } from "./spending-pie"
 
 export const DataCharts = () => {
     const { accountId } = useAccountFilter()
+    const { from, to } = useDateFilter()
 
     const { data, isLoading, error } = useGetSummary({
+        from: format(from, "yyyy-MM-dd"),
+        to: format(to, "yyyy-MM-dd"),
         account_id: accountId !== "all" ? accountId : undefined,
     })
 

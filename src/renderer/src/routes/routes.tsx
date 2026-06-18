@@ -8,10 +8,12 @@ import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
 import TransactionsPage from "@renderer/pages/transactions/TransactionsPage";
 import DashboardPage from "@renderer/pages/summary/DashboardPage";
 import { AccountFilterProvider } from "@renderer/hooks/use-account-filter";
+import { DateFilterProvider } from "@renderer/hooks/use-date-filter";
 
 export function RoutesApp() {
     return (
         <AccountFilterProvider>
+        <DateFilterProvider>
         <Routes>
             <Route path="/sign-in" element={<SignInPage />} />
             <Route path="/sign-up" element={<SignUpPage />} />
@@ -26,6 +28,7 @@ export function RoutesApp() {
             {/* Catch-all route */}
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </DateFilterProvider>
         </AccountFilterProvider>
     )
 }

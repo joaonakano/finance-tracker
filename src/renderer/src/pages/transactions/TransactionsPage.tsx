@@ -16,6 +16,8 @@ import { UploadButton } from "./components/upload-button";
 import { ImportCard } from "./components/import-card";
 import { useSelectAccount } from "../accounts/hooks/use-select-account";
 import { useAccountFilter } from "@renderer/hooks/use-account-filter";
+import { useDateFilter } from "@renderer/hooks/use-date-filter";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { useBulkCreateTransactions } from "./api/use-bulk-create-transactions";
 import { DashboardLayout } from "@renderer/components/layout";
@@ -50,8 +52,11 @@ export default function TransactionsPage() {
     const createTransactions = useBulkCreateTransactions()
     const deleteTransactions = useBulkDeleteTransactions()
     const { accountId: filterAccountId } = useAccountFilter()
+    const { from, to } = useDateFilter()
     const { transactions, isLoading, error } = useGetTransactions({
         account_id: filterAccountId !== "all" ? filterAccountId : undefined,
+        start_date: format(from, "yyyy-MM-dd"),
+        end_date: format(to, "yyyy-MM-dd"),
     })
  
     const onSubmitImport = async (values: BulkCreateTransactionItem[]): Promise<void> => {

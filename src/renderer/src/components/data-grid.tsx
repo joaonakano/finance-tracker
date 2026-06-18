@@ -1,30 +1,24 @@
-import { useState } from "react"
-import { subDays, format } from "date-fns"
+import { format } from "date-fns"
 import { formatDateRange } from "@renderer/lib/utils"
 import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
+import { useDateFilter } from "@renderer/hooks/use-date-filter"
 
 import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6"
 import { FaPiggyBank } from "react-icons/fa"
 
 import { DataCard, DataCardHardLoading } from "@/components/data-card"
 
-function defaultFrom(): string {
-    return format(subDays(new Date(), 30), "yyyy-MM-dd")
-}
-
-function defaultTo(): string {
-    return format(new Date(), "yyyy-MM-dd")
-}
-
 export const DataGrid = () => {   
-    const [from, setFrom] = useState<string>(defaultFrom)
-    const [to, setTo] = useState<string>(defaultTo)
+    const { from, to } = useDateFilter()
     const { accountId } = useAccountFilter()
 
+    const fromStr = format(from, "yyyy-MM-dd")
+    const toStr = format(to, "yyyy-MM-dd")
+
     const { data, isLoading, error } = useGetSummary({
-        from,
-        to,
+        from: fromStr,
+        to: toStr,
         account_id: accountId !== "all" ? accountId : undefined,
     })
 

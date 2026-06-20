@@ -79,7 +79,7 @@ export default function TransactionsPage() {
     
     if (isLoading) {
         return (
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
+            <div className="pb-10">
                 <Card>
                     <CardHeader>
                         <Skeleton className="h-8 w-48"/>
@@ -113,7 +113,7 @@ export default function TransactionsPage() {
     return (
         <DashboardLayout>
             {accountDialog}
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-20">
+            <div className="pb-10">
                 <Card>
                     <CardHeader className="flex flex-col gap-x-2 gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
                         <CardTitle className="text-xl font-bold line-clamp-1">

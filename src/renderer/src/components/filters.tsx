@@ -1,11 +1,9 @@
 import { AccountFilter } from "@/components/account-filter"
-import { DateFilter } from "@/components/date-filter"
 
 export const Filters = () => {
     return (
-        <div className="flex flex-col lg:flex-row items-center gap-y-2 lg:gap-y-0 lg:gap-x-2 lg:mb-10">
+        <div className="flex flex-col lg:flex-row items-center gap-y-2 lg:gap-y-0 lg:gap-x-2 mb-7">
             <AccountFilter />
-            <DateFilter />
         </div>
     )
 }

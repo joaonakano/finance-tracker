@@ -19,8 +19,8 @@ export const AccountFilter = () => {
             onValueChange={setAccountId}
             disabled={isLoading}
         >
-            <SelectTrigger className="lg:w-auto w-full h-9 rounded-sm px-3 font-normal bg-white/10 hover:bg-white/20 hover:text-white border-none focus:ring-offset-0 focus:ring-transparent outline-none text-white focus:bg-white/30 transition data-placeholder:text-white [&_svg]:text-white">
-                <SelectValue placeholder="Account" />
+            <SelectTrigger className="lg:w-auto w-full h-9 rounded-lg px-3 font-normal bg-white border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-800 transition">
+                <SelectValue placeholder="Conta" />
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">

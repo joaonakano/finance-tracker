@@ -26,7 +26,6 @@ export const DataCharts = () => {
                 </div>
             </div>
         )
-
     }
 
     if (error) {

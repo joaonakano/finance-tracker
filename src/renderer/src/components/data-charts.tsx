@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
+import { useGetSummary } from "@renderer/pages/dashboard/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 import { useDateFilter } from "@renderer/hooks/use-date-filter"
 import { Chart, ChartLoading } from "./chart"

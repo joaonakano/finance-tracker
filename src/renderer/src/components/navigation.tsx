@@ -18,7 +18,7 @@ const routes = [
     },
     {
         href: "/transactions",
-        label: "Despesas",
+        label: "Transações",
     },
     {
         href: "/accounts",

@@ -1,6 +1,6 @@
 import { format } from "date-fns"
 import { formatDateRange } from "@renderer/lib/utils"
-import { useGetSummary } from "@renderer/pages/summary/api/use-get-summary"
+import { useGetSummary } from "@renderer/pages/dashboard/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 import { useDateFilter } from "@renderer/hooks/use-date-filter"
 

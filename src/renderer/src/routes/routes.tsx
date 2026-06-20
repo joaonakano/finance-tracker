@@ -6,7 +6,7 @@ import { NotFoundPage } from "@renderer/pages/auth/NotFound";
 import AccountsPage from "@renderer/pages/accounts/AccountsPage";
 import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
 import TransactionsPage from "@renderer/pages/transactions/TransactionsPage";
-import DashboardPage from "@renderer/pages/summary/DashboardPage";
+import DashboardPage from "@renderer/pages/dashboard/DashboardPage";
 import { AccountFilterProvider } from "@renderer/hooks/use-account-filter";
 import { DateFilterProvider } from "@renderer/hooks/use-date-filter";
 

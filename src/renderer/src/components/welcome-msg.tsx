@@ -4,6 +4,7 @@ import { ptBR } from "date-fns/locale"
 import { Hand } from "lucide-react"
 import { useState } from "react"
 import { DateRange } from "react-day-picker"
+import { useLocation } from "react-router"
 
 import { useDateFilter } from "@/hooks/use-date-filter"
 import { Button } from "@/components/ui/button"
@@ -15,11 +16,21 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
+const SUBTITLES: Record<string, string> = {
+    "/": "Esse é o resumo das suas finanças",
+    "/transactions": "Gerencie suas transações financeiras",
+    "/accounts": "Gerencie suas contas bancárias",
+    "/categories": "Organize suas categorias",
+    "/settings": "Ajuste as preferências do sistema",
+}
+
 export function WelcomeMsg() {
     const { user, isLoaded } = useUser()
     const { from, to, setDateRange } = useDateFilter()
+    const location = useLocation()
 
     const firstName = user?.firstName ?? user?.username ?? ""
+    const subtitle = SUBTITLES[location.pathname] ?? SUBTITLES["/"]
 
     const [date, setDate] = useState<DateRange | undefined>({ from, to })
 
@@ -43,7 +54,7 @@ export function WelcomeMsg() {
                     <span className="font-light opacity-90">{firstName}</span>
                 </h1>
                 <p className="text-sm lg:text-base text-blue-200/80">
-                    Esse é o resumo das suas finanças
+                    {subtitle}
                 </p>
             </div>
 
@@ -55,8 +66,8 @@ export function WelcomeMsg() {
                                 Período atual
                             </div>
                             <div className="text-lg font-bold mt-0.5 whitespace-nowrap">
-                                {format(from, "dd MMM", { locale: ptBR })} –{" "}
-                                {format(to, "dd MMM yyyy", { locale: ptBR })}
+                                {format(from, "dd MMMM", { locale: ptBR })} a{" "}
+                                {format(to, "dd MMMM yyyy", { locale: ptBR })}
                             </div>
                         </div>
                     </button>

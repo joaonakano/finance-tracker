@@ -5,7 +5,6 @@ import { useState } from "react"
 import { HeaderLogo } from "@/components/header-logo"
 import { Navigation } from "@/components/navigation"
 import { WelcomeMsg } from "@/components/welcome-msg"
-import { Filters } from "@/components/filters"
 
 export function Header() {
     const { user, isLoaded } = useUser()
@@ -105,9 +104,6 @@ export function Header() {
 
             {/* Welcome message */}
             <WelcomeMsg />
-
-            {/* Filters */}
-            <Filters />
         </header>
     )
 }

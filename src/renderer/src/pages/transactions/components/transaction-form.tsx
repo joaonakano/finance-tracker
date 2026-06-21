@@ -47,7 +47,7 @@ export const TransactionForm = ({
     const [amount, setAmount] = useState(defaultValues?.amount?.toString() ?? "")
     const [payee, setPayee] = useState(defaultValues?.payee ?? "")
     const [notes, setNotes] = useState(defaultValues?.notes ?? "")
-    const [date, setDate] = useState(defaultValues?.date ?? new Date().toISOString().slice(0, 10))
+    const [date, setDate] = useState(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
     const [accountId, setAccountId] = useState(defaultValues?.account_id ?? "")
     const [categoryId, setCategoryId] = useState(defaultValues?.category_id ?? "")
 
@@ -55,7 +55,7 @@ export const TransactionForm = ({
         setAmount(defaultValues?.amount?.toString() ?? "")
         setPayee(defaultValues?.payee ?? "")
         setNotes(defaultValues?.notes ?? "")
-        setDate(defaultValues?.date ?? new Date().toISOString().slice(0, 10))
+        setDate(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
         setAccountId(defaultValues?.account_id ?? "")
         setCategoryId(defaultValues?.category_id ?? "")
     }, [defaultValues])
@@ -196,7 +196,7 @@ export const TransactionForm = ({
             <Button
                 type="submit"
                 className="w-full"
-                disabled={disabled || !payee.trim() || !amount.trim() || !accountId}
+                disabled={disabled || !payee.trim() || !amount.trim() || !accountId || !date}
             >
                 {id ? "Salvar alterações" : "Criar transação"}
             </Button>

@@ -30,7 +30,7 @@ export const DatePicker = ({
                     disabled={disabled}
                     variant="outline"
                     className={cn(
-                        "w-full justify-start text-left font-normal cursor-pointer",
+                        "w-full justify-start text-left font-normal cursor-pointer bg-white",
                         !value && "text-muted-foreground",
                     )}   
                 >

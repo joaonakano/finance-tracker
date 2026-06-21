@@ -2,11 +2,10 @@ import { Button } from "@renderer/components/ui/button"
 import { Checkbox } from "@renderer/components/ui/checkbox"
 import { TransactionWithRelations } from "@shared/types"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, TrendingDown, TrendingUp } from "lucide-react"
 import { Actions } from "./actions"
 import { format } from "date-fns"
-import { formatCurrency } from "@renderer/lib/utils"
-import { Badge } from "@renderer/components/ui/badge"
+import { cn, formatCurrency } from "@renderer/lib/utils"
 import { AccountColumn } from "./account-column"
 import { CategoryColumn } from "./category-column"
 
@@ -38,6 +37,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -56,6 +56,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -79,6 +80,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -93,6 +95,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -103,19 +106,21 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"))
-
-      // const formatted = new Intl.NumberFormat("pt-BR", {
-      //   style: "currency",
-      //   currency: "BRL",
-      // }).format(amountToNormalCurrency)
+      const isIncome = amount >= 0
 
       return (
-        <Badge
-          variant={amount < 0 ? "destructive" : "primary"}
-          className="tx-xs font-medium px-3.5 py-4"
-          >
-            {formatCurrency(amount)}
-        </Badge>
+        <div className={cn(
+          "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-sm font-semibold",
+          isIncome
+            ? "bg-emerald-50 text-emerald-700"
+            : "bg-rose-50 text-rose-700"
+        )}>
+          {isIncome
+            ? <TrendingUp className="size-3.5" />
+            : <TrendingDown className="size-3.5" />
+          }
+          {formatCurrency(amount)}
+        </div>
     )
     },
   },
@@ -124,6 +129,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
+          className="px-0"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >

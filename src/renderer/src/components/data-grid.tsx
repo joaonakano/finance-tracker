@@ -4,8 +4,7 @@ import { useGetSummary } from "@renderer/pages/dashboard/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 import { useDateFilter } from "@renderer/hooks/use-date-filter"
 
-import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6"
-import { FaPiggyBank } from "react-icons/fa"
+import { PiggyBank, TrendingDown, TrendingUp } from "lucide-react"
 
 import { DataCard, DataCardHardLoading } from "@/components/data-card"
 
@@ -26,7 +25,7 @@ export const DataGrid = () => {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-2 mb-8">
                 <DataCardHardLoading />
                 <DataCardHardLoading />
                 <DataCardHardLoading />
@@ -36,29 +35,29 @@ export const DataGrid = () => {
     if (error) return <div>Erro: {error.message}</div>
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-2 mb-8">
             <DataCard
-                title="Remaining"
+                title="Disponível"
                 value={data?.remainingAmount}
                 percentageChange={data?.remainingChange}
-                icon={FaPiggyBank}
-                variant="default"
+                icon={PiggyBank}
+                variant="warning"
                 dateRange={dateRangeLabel}
             />
             <DataCard
-                title="Income"
+                title="Receitas"
                 value={data?.incomeAmount}
                 percentageChange={data?.incomeChange}
-                icon={FaArrowTrendUp}
-                variant="default"
+                icon={TrendingUp}
+                variant="success"
                 dateRange={dateRangeLabel}
             />
             <DataCard
-                title="Expenses"
+                title="Despesas"
                 value={data?.expensesAmount}
                 percentageChange={data?.expensesChange}
-                icon={FaArrowTrendDown}
-                variant="default"
+                icon={TrendingDown}
+                variant="danger"
                 dateRange={dateRangeLabel}
             />
          

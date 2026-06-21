@@ -1,4 +1,4 @@
-import { IconType } from "react-icons"
+import { type ComponentType } from "react"
 import { VariantProps, cva } from "class-variance-authority"
 
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils"
@@ -9,14 +9,14 @@ import { CountUp } from "./count-up"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const boxVariant = cva(
-    "shrink-0 rounded-sm p-3",
+    "shrink-0 size-10 rounded-xl flex items-center justify-center",
     {
         variants: {
             variant: {
-                default: "bg-blue-500/20",
-                success: "bg-emerald-500/20",
-                danger: "bg-rose-500/20",
-                warning: "bg-yellow-500/20",
+                default: "bg-blue-50 text-blue-600",
+                success: "bg-emerald-50 text-emerald-600",
+                danger: "bg-rose-50 text-rose-600",
+                warning: "bg-amber-50 text-amber-600",
             }
         },
         defaultVariants: {
@@ -26,14 +26,14 @@ const boxVariant = cva(
 )
 
 const iconVariant = cva(
-    "size-6",
+    "size-5",
     {
         variants: {
             variant: {
-                default: "fill-blue-500",
-                success: "fill-emerald-500",
-                danger: "fill-rose-500",
-                warning: "fill-yellow-500",
+                default: "text-blue-600",
+                success: "text-emerald-600",
+                danger: "text-rose-600",
+                warning: "text-amber-600",
             }
         },
         defaultVariants: {
@@ -46,7 +46,7 @@ type BoxVariants = VariantProps<typeof boxVariant>
 type IconVariants = VariantProps<typeof iconVariant>
 
 interface DataCardProps extends BoxVariants, IconVariants {
-    icon: IconType
+    icon: ComponentType<{ className?: string }>
     title: string
     value?: number
     dateRange: string
@@ -62,38 +62,41 @@ export const DataCard = ({
     percentageChange = 0,
 }: DataCardProps) => {
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-x-4">
-                <div className="space-y-2">
-                    <CardTitle className="text-2xl line-clamp-1">
+        <Card className="hover:-translate-y-1 hover:shadow-md transition-all duration-300 border-slate-200">
+            <CardHeader className="flex flex-row items-center justify-between gap-x-4 pb-2">
+                <div className="space-y-1">
+                    <CardDescription className="text-xs font-medium uppercase tracking-wide text-slate-500">
                         {title}
-                    </CardTitle>
-                    <CardDescription className="line-clamp1">
-                        {dateRange}
                     </CardDescription>
+                    <CardTitle className="text-2xl font-bold text-slate-800 line-clamp-1">
+                        <CountUp
+                            preserveValue
+                            start={0}
+                            end={value}
+                            decimals={2}
+                            decimalPlaces={2}
+                            formattingFn={formatCurrency}
+                        />
+                    </CardTitle>
                 </div>
                 <div className={cn(boxVariant({ variant }))}>
                     <Icon className={cn(iconVariant({ variant }))} />
                 </div>
             </CardHeader>
-            <CardContent>
-                <h1 className="font-bold text-2xl mb-2 line-clamp-1 break-all">
-                    <CountUp
-                        preserveValue
-                        start={0}
-                        end={value}
-                        decimals={2}
-                        decimalPlaces={2}
-                        formattingFn={formatCurrency}
-                    />
-                </h1>
-                <p className={cn(
-                    "text-muted-foreground text-sm line-clamp-1",
-                    percentageChange > 0 && "text-emerald-500",
-                    percentageChange < 0 && "text-rose-500",
-                )}>
-                    {formatPercentage(percentageChange, { addPrefix: true })} from last period
-                </p>
+            <CardContent className="pt-0">
+                <div className="flex items-center gap-2 text-sm">
+                    <span className={cn(
+                        "font-medium",
+                        percentageChange > 0 && "text-emerald-600",
+                        percentageChange < 0 && "text-rose-600",
+                        percentageChange === 0 && "text-slate-500",
+                    )}>
+                        {formatPercentage(percentageChange, { addPrefix: true })}
+                    </span>
+                    <span className="text-slate-400 text-xs">
+                        do período anterior
+                    </span>
+                </div>
             </CardContent>
         </Card>
     )
@@ -101,17 +104,16 @@ export const DataCard = ({
 
 export const DataCardHardLoading = () => {
     return (
-        <Card className="border-none drop-shadow-sm h-8">
-            <CardHeader className="flex flex-row items-center justify-between gap-x-4">
+        <Card className="border-slate-200">
+            <CardHeader className="flex flex-row items-center justify-between gap-x-4 pb-2">
                 <div className="space-y-2">
-                    <Skeleton className="h-6 w-24" />
-                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-8 w-32" />
                 </div>
-                <Skeleton className="size-12" />
+                <Skeleton className="size-10 rounded-xl" />
             </CardHeader>
-            <CardContent>
-                <Skeleton className="shrink-0 h-10 w-24 mb-2" />
-                <Skeleton className="shrink-0 h-4 w-40" />
+            <CardContent className="pt-0">
+                <Skeleton className="h-4 w-28" />
             </CardContent>
         </Card>
     )

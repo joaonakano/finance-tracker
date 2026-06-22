@@ -19,6 +19,7 @@ type AccountDialogProps = {
     onConfirm: () => void
     selectValue: string | undefined
     onSelect: (value: string | undefined) => void
+    onCreate: (name: string) => void
     accountOptions: { label: string; value: string }[]
     isLoading: boolean
     isPending: boolean
@@ -30,6 +31,7 @@ const AccountDialog = ({
     onConfirm,
     selectValue,
     onSelect,
+    onCreate,
     accountOptions,
     isLoading,
     isPending,
@@ -45,7 +47,7 @@ const AccountDialog = ({
             <Select
                 placeholder="Selecione uma conta"
                 options={accountOptions}
-                onCreate={(name) => onSelect(name)}
+                onCreate={onCreate}
                 onChange={onSelect}
                 value={selectValue}
                 disabled={isLoading || isPending}
@@ -97,6 +99,17 @@ export const useSelectAccount = (): [React.ReactElement, () => Promise<unknown>]
         handleClose()
     }, [promise, handleClose])
 
+    const handleCreateAccount = useCallback((name: string) => {
+        accountMutation.mutate(
+            { name },
+            {
+                onSuccess: (account) => {
+                    setSelectValue(account.id)
+                },
+            }
+        )
+    }, [accountMutation])
+
     const dialogElement = (
         <AccountDialog
             open={promise !== null}
@@ -104,6 +117,7 @@ export const useSelectAccount = (): [React.ReactElement, () => Promise<unknown>]
             onConfirm={handleConfirm}
             selectValue={selectValue}
             onSelect={setSelectValue}
+            onCreate={handleCreateAccount}
             accountOptions={accountOptions}
             isLoading={accountQuery.isLoading}
             isPending={accountMutation.isPending}

@@ -30,6 +30,7 @@ export function WelcomeMsg() {
     const location = useLocation()
 
     const firstName = user?.firstName ?? user?.username ?? ""
+    const isSettingsPage = location.pathname.startsWith("/settings")
     const subtitle = SUBTITLES[location.pathname] ?? SUBTITLES["/"]
 
     const [date, setDate] = useState<DateRange | undefined>({ from, to })
@@ -58,6 +59,7 @@ export function WelcomeMsg() {
                 </p>
             </div>
 
+            {!isSettingsPage && (
             <Popover>
                 <PopoverTrigger asChild>
                     <button className="flex gap-8 bg-white/10 px-6 py-3 rounded-xl backdrop-blur-xs hover:bg-white/20 transition cursor-pointer">
@@ -105,6 +107,7 @@ export function WelcomeMsg() {
                     </div>
                 </PopoverContent>
             </Popover>
+            )}
         </div>
     )
 }

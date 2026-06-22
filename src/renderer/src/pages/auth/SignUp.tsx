@@ -22,7 +22,14 @@ export const SignUpPage = () => {
                         </div>
 
                         <ClerkLoaded>
-                            <SignUp signInUrl="/sign-in" />
+                            <SignUp
+                                signInUrl="/sign-in"
+                                appearance={{
+                                    elements: {
+                                        footer: 'hidden'
+                                    }
+                                }}
+                            />
                         </ClerkLoaded>
                         <ClerkLoading>
                             <div className="flex justify-center">

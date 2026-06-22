@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
+import http from 'node:http'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { setupSchema } from './db/schema'
@@ -7,13 +8,17 @@ import { registerAccountHandlers } from './ipc/account.handlers'
 import { registerCategoryHandlers } from './ipc/category.handlers'
 import { registerSummaryHandlers } from './ipc/summary.handlers'
 import { registerTransactionHandlers } from './ipc/transaction.handlers'
+import { startLocalServer } from './server'
 
-function createWindow(): void {
+let localServer: http.Server | null = null
+
+async function createWindow(): Promise<void> {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     show: false,
+    title: 'FinanceTracker',
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -23,7 +28,17 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.webContents.openDevTools()
+  // Open DevTools automatically in dev mode; in production, only via F12
+  if (is.dev) {
+    mainWindow.webContents.openDevTools()
+  }
+
+  // F12 always toggles DevTools (production + dev)
+  mainWindow.webContents.on('before-input-event', (_event, input) => {
+    if (input.key === 'F12') {
+      mainWindow.webContents.toggleDevTools()
+    }
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -39,7 +54,13 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    // In production, start a local HTTP server so the renderer gets a proper
+    // origin (http://localhost:PORT) instead of null (file://).
+    // This fixes Clerk authentication 400 errors.
+    const rendererDir = join(__dirname, '../renderer')
+    const { server, port } = await startLocalServer(rendererDir)
+    localServer = server
+    mainWindow.loadURL(`http://localhost:${port}`)
   }
 }
 
@@ -81,6 +102,14 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
+  }
+})
+
+// Clean up the local HTTP server when the app is about to quit
+app.on('before-quit', () => {
+  if (localServer) {
+    localServer.close()
+    localServer = null
   }
 })
 

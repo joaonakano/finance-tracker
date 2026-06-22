@@ -30,9 +30,9 @@ export function Header() {
                         title="Notificações"
                     >
                         <Bell className="size-[18px]" />
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+                        {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
                             3
-                        </span>
+                        </span> */}
                     </button>
 
                     {/* Help button */}

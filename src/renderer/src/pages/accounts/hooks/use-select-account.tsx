@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useGetAccounts } from "../api/use-get-accounts";
 import { useCreateAccount } from "../api/use-create-account";
 import {
@@ -66,10 +66,6 @@ export const useSelectAccount = (): [React.ReactElement, () => Promise<unknown>]
     const accountQuery = useGetAccounts()
     const accountMutation = useCreateAccount()
  
-    const onCreateAccount = useCallback((name: string) => {
-        accountMutation.mutate({ name })
-    }, [accountMutation])
- 
     const accountOptions = useMemo(
         () => (accountQuery.accounts ?? []).map((account) => ({
             label: account.name,
@@ -100,8 +96,7 @@ export const useSelectAccount = (): [React.ReactElement, () => Promise<unknown>]
         promise?.resolve(undefined)
         handleClose()
     }, [promise, handleClose])
- 
-    // ✅ JSX element direto — React atualiza props no lugar, sem remontar
+
     const dialogElement = (
         <AccountDialog
             open={promise !== null}

@@ -58,7 +58,6 @@ export const DataCard = ({
     title,
     value = 0,
     variant,
-    dateRange,
     percentageChange = 0,
 }: DataCardProps) => {
     return (

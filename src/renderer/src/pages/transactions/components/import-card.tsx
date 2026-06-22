@@ -1,10 +1,8 @@
 import { Button } from "@renderer/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card"
-import { Plus } from "lucide-react"
-import { UploadButton } from "./upload-button"
 import { useState } from "react"
 import { ImportTable } from "./import-table"
-import { convertAmountFromMiliunits, convertAmountToMiliunits } from "@renderer/lib/utils"
+import { convertAmountToMiliunits } from "@renderer/lib/utils"
 import { format, parse } from "date-fns"
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss"

@@ -2,7 +2,7 @@
 import { BulkCreateTransactionItem } from "@shared/types"
 
 import { Button } from "@renderer/components/ui/button";
-import { Loader2, Plus, ArrowLeftRight } from "lucide-react";
+import { Plus, ArrowLeftRight } from "lucide-react";
 
 import { DataTable } from "@renderer/components/data-table";
 import { Skeleton } from "@renderer/components/ui/skeleton";

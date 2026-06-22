@@ -3,7 +3,7 @@ import { useNewAccount } from "@renderer/pages/accounts/hooks/use-new-account";
 import { useGetAccounts } from "@renderer/pages/accounts/api/use-get-accounts";
 
 import { Button } from "@renderer/components/ui/button";
-import { Loader2, Plus, Wallet } from "lucide-react";
+import { Plus, Wallet } from "lucide-react";
 
 import { columns } from "@/pages/accounts/components/columns";
 

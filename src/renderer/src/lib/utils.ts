@@ -16,7 +16,7 @@ export function convertAmountFromMiliunits(amount: number) {
 }
 
 export function formatCurrency(value: number) {
-  return Intl.NumberFormat("en-US", {
+  return Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
     minimumFractionDigits: 2,

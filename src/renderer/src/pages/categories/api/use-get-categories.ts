@@ -25,7 +25,6 @@ export const useGetCategories = (): UseCategoriesResult => {
                 throw new Error("Falha ao localizar categorias")
             }
 
-            console.log(response)
             return response
         },
         enabled: !!userId && isLoaded,

@@ -44,7 +44,7 @@ export const TransactionForm = ({
     const createAccount = useCreateAccount()
     const createCategory = useCreateCategory()
 
-    const [amount, setAmount] = useState(defaultValues?.amount?.toString() ?? "")
+    const [amount, setAmount] = useState<number | null>(defaultValues?.amount ?? null)
     const [payee, setPayee] = useState(defaultValues?.payee ?? "")
     const [notes, setNotes] = useState(defaultValues?.notes ?? "")
     const [date, setDate] = useState(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
@@ -52,7 +52,7 @@ export const TransactionForm = ({
     const [categoryId, setCategoryId] = useState(defaultValues?.category_id ?? "")
 
     useEffect(() => {
-        setAmount(defaultValues?.amount?.toString() ?? "")
+        setAmount(defaultValues?.amount ?? null)
         setPayee(defaultValues?.payee ?? "")
         setNotes(defaultValues?.notes ?? "")
         setDate(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
@@ -103,13 +103,11 @@ export const TransactionForm = ({
 
         const trimmedPayee = payee.trim()
 
-        const numericAmount = parseFloat(amount)
-
-        const amountInMiliunits = convertAmountToMiliunits(numericAmount)
-
-        if (!trimmedPayee || isNaN(amountInMiliunits) || !accountId) {
+        if (amount === null || !trimmedPayee || !accountId) {
             return
         }
+
+        const amountInMiliunits = convertAmountToMiliunits(amount)
 
         onSubmit({
             amount: amountInMiliunits,
@@ -140,7 +138,7 @@ export const TransactionForm = ({
                 <span className="text-muted-foreground">Valor</span>
                 <AmountInput
                     value={amount}
-                    onChange={(value) => setAmount(value ?? "")}
+                    onChange={setAmount}
                     placeholder="Valor da transação"
                     disabled={disabled}
                 />
@@ -196,7 +194,7 @@ export const TransactionForm = ({
             <Button
                 type="submit"
                 className="w-full"
-                disabled={disabled || !payee.trim() || !amount.trim() || !accountId || !date}
+                disabled={disabled || !payee.trim() || amount === null || !accountId || !date}
             >
                 {id ? "Salvar alterações" : "Criar transação"}
             </Button>

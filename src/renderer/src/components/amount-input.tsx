@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react"
 import CurrencyInput from "react-currency-input-field"
 import { Info, MinusCircle, PlusCircle } from "lucide-react"
 import { cn } from "@renderer/lib/utils"
@@ -9,11 +10,13 @@ import {
 } from "@/components/ui/tooltip"
 
 type Props = {
-    value: string
-    onChange: (value: string | undefined) => void
+    value: number | null
+    onChange: (value: number | null) => void
     placeholder?: string
     disabled?: boolean
 }
+
+/* Todo: refazer a logica de captura e tratamento do valor */
 
 export const AmountInput = ({
     value,
@@ -21,15 +24,36 @@ export const AmountInput = ({
     placeholder,
     disabled,
 }: Props) => {
-    const parsedValue = parseFloat(value)
-    const isIncome = parsedValue > 0
-    const isExpense = parsedValue < 0
+    const [rawValue, setRawValue] = useState("")
+    const isInternalUpdate = useRef(false)
+
+    useEffect(() => {
+        if (isInternalUpdate.current) {
+            isInternalUpdate.current = false
+            return
+        }
+        setRawValue(value !== null ? value.toString() : "")
+    }, [value])
+
+    const isIncome = value !== null && value > 0
+    const isExpense = value !== null && value < 0
 
     const onReverseValue = () => {
-        if (!value) return
-        
-        const newValue = parseFloat(value) * -1
-        onChange(newValue.toString())
+        if (value === null) return
+        const newValue = value * -1
+        isInternalUpdate.current = true
+        setRawValue(newValue.toString())
+        onChange(newValue)
+    }
+
+    const handleValueChange = (
+        _value: string | undefined,
+        _name: string | undefined,
+        values?: { float: number | null; formatted: string; value: string }
+    ) => {
+        isInternalUpdate.current = true
+        setRawValue(_value ?? "")
+        onChange(values?.float ?? null)
     }
 
     return (
@@ -51,7 +75,7 @@ export const AmountInput = ({
                                     isExpense && "bg-rose-500 hover:bg-rose-600"
                                 )}
                             >
-                                {!parsedValue && <Info className="size-4 text-white" />}
+                                {(value === null || value === 0) && <Info className="size-4 text-white" />}
                                 {isIncome && <PlusCircle className="size-4 text-white" />}
                                 {isExpense && <MinusCircle className="size-4 text-white" />}
                             </button>
@@ -74,13 +98,13 @@ export const AmountInput = ({
                         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
                     )}
                     placeholder={placeholder}
-                    value={value}
+                    value={rawValue}
                     decimalsLimit={2}
                     decimalScale={2}
-                    onValueChange={onChange}
+                    onValueChange={handleValueChange}
                     disabled={disabled}
-                    decimalSeparator="."
-                    groupSeparator=","
+                    decimalSeparator=","
+                    groupSeparator="."
                     max={999999999.99}
                     maxLength={15}
                 />

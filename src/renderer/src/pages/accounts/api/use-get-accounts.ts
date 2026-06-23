@@ -25,7 +25,6 @@ export const useGetAccounts = (): UseAccountsResult => {
                 throw new Error("Falha ao localizar contas")
             }
 
-            console.log(response)
             return response
         },
         enabled: !!userId && isLoaded,

@@ -16,8 +16,8 @@ Se você é desenvolvedor e planeja executar o código-fonte do projeto, é nece
 
 1. Clone o Repositório:
 ```bash
-git clone https://github.com/joaonakano/extensao-finance-beam.git
-cd extensao-finance-beam
+git clone https://github.com/joaonakano/finance-tracker.git
+cd finance-tracker
 ```
 
 2. Instale as Dependências:
@@ -25,10 +25,16 @@ cd extensao-finance-beam
 npm install
 ```
 
-3. Reconstrua os Módulos do Electron (se aplicável):
+3. Reconstrua os Módulos do Electron (se necessário):
 ```bash
 npx electron-rebuild
 ```
+
+4. Crie um arquivo .env, insira a sua chave de API do Clerk (VITE_CLERK_PUBLISHABLE_KEY) e mova-o para a pasta raíz deste projeto.
+```.env
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
+```
+Para maiores informações, consulte: https://clerk.com/docs/react/getting-started/quickstart#set-your-clerk-api-keys
 
 ## Executando o Programa
 

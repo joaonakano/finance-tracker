@@ -40,7 +40,7 @@ export const Chart = ({ data = [] }: Props) => {
         <Card className="border-none">
             <CardHeader className="flex space-y-2 lg:space-y-0 lg:flex-row lg:items-center justify-between">
                 <CardTitle className="text-xl line-clamp-1">
-                    Transactions
+                    Transações
                 </CardTitle>
                 <Select
                     defaultValue={chartType}

@@ -13,21 +13,25 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+      <div className="flex justify-center px-0 py-8 w-full rounded-none">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div className="flex justify-center">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
@@ -37,7 +41,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -56,7 +60,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -80,7 +84,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -95,7 +99,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -129,7 +133,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >

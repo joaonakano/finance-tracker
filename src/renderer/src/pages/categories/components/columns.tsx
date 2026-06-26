@@ -33,7 +33,7 @@ export const columns: ColumnDef<Account>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-0"
+          className="px-0 rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >

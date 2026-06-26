@@ -18,6 +18,7 @@ export const columns: ColumnDef<Account>[] = [
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
+          className="border-muted-foreground"
         />
       </div>
     ),
@@ -39,7 +40,7 @@ export const columns: ColumnDef<Account>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none text-muted-foreground"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >

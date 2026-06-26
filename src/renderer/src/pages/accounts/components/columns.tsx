@@ -8,11 +8,9 @@ import { Actions } from "./actions"
 export const columns: ColumnDef<Account>[] = [
   {
     id: "select",
-    size: 1,
-    maxSize: 1,
-    minSize: 0.1,
+    size: 0,
     header: ({ table }) => (
-      <div className="flex justify-center px-0 py-8 w-full rounded-none bg-red-500">
+      <div className="flex justify-center px-0 py-8 w-full rounded-none">
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -37,6 +35,7 @@ export const columns: ColumnDef<Account>[] = [
   },
   {
     accessorKey: "name",
+    size: 100,
     header: ({ column }) => {
       return (
         <Button
@@ -52,6 +51,7 @@ export const columns: ColumnDef<Account>[] = [
   },
   {
     id: "actions",
+    size: 60,
     cell: ({ row }) => (
       <Actions id={row.original.id} />
     ),

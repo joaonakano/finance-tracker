@@ -35,7 +35,7 @@ export const columns: ColumnDef<Account>[] = [
   },
   {
     accessorKey: "name",
-    size: 100,
+    size: 200,
     header: ({ column }) => {
       return (
         <Button

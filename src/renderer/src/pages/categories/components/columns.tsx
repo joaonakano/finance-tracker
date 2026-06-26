@@ -8,32 +8,38 @@ import { Actions } from "./actions"
 export const columns: ColumnDef<Account>[] = [
   {
     id: "select",
+    size: 0,
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+      <div className="flex justify-center px-0 py-8 w-full rounded-none">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div className="flex justify-center">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "name",
+    size: 200,
     header: ({ column }) => {
       return (
         <Button
-          className="px-0 rounded-none"
+          className="px-2 py-10 w-full hover:bg-(--hover-header-color) justify-start rounded-none"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -45,6 +51,7 @@ export const columns: ColumnDef<Account>[] = [
   },
   {
     id: "actions",
+    size: 60,
     cell: ({ row }) => (
       <Actions id={row.original.id} />
     ),

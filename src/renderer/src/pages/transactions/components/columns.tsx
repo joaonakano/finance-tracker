@@ -12,6 +12,7 @@ import { CategoryColumn } from "./category-column"
 export const columns: ColumnDef<TransactionWithRelations>[] = [
   {
     id: "select",
+    size: 50,
     header: ({ table }) => (
       <div className="flex justify-center px-0 py-8 w-full rounded-none">
         <Checkbox
@@ -38,6 +39,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
     {
     accessorKey: "date",
+    size: 1,
     header: ({ column }) => {
       return (
         <Button
@@ -57,6 +59,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
   {
     accessorKey: "category",
+    size: 2,
     header: ({ column }) => {
       return (
         <Button
@@ -81,6 +84,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
   {
     accessorKey: "payee",
+    size: 2,
     header: ({ column }) => {
       return (
         <Button
@@ -96,6 +100,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
   {
     accessorKey: "amount",
+    size: 5,
     header: ({ column }) => {
       return (
         <Button
@@ -130,6 +135,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
   {
     accessorKey: "account",
+    size: 1,
     header: ({ column }) => {
       return (
         <Button
@@ -153,6 +159,7 @@ export const columns: ColumnDef<TransactionWithRelations>[] = [
   },
   {
     id: "actions",
+    size: 60,
     cell: ({ row }) => (
       <Actions id={row.original.id} />
     ),

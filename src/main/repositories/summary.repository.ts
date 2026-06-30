@@ -6,7 +6,7 @@ import {
     SummaryOutput,
 } from "@shared/types"
 
-import { eachDayOfInterval, isSameDay, subDays, differenceInDays } from "date-fns"
+import { eachDayOfInterval, isSameDay, parse, subDays, differenceInDays } from "date-fns"
 
 import { db } from "../db/db"
 
@@ -17,6 +17,13 @@ export class SummaryRepository {
 
         const startDate = data.from ?? defaultFrom.toISOString().slice(0, 10)
         const endDate = data.to ?? defaultTo.toISOString().slice(0, 10)
+
+        console.log("[summary] getByDate called with:", {
+            from: data.from,
+            to: data.to,
+            startDate,
+            endDate,
+        })
 
         const periodLength =
             differenceInDays(new Date(endDate), new Date(startDate)) + 1
@@ -97,7 +104,7 @@ export class SummaryRepository {
                 `
             SELECT
                 COALESCE(SUM(CASE WHEN t.amount >= 0 THEN t.amount ELSE 0 END), 0) AS income,
-                COALESCE(SUM(CASE WHEN t.amount < 0 THEN t.amount ELSE 0 END), 0) AS expenses,
+                COALESCE(SUM(CASE WHEN t.amount < 0 THEN ABS(t.amount) ELSE 0 END), 0) AS expenses,
                 COALESCE(SUM(t.amount), 0) AS remaining
             FROM transactions t
             INNER JOIN accounts a ON t.account_id = a.id
@@ -205,7 +212,7 @@ function calculatePercentageChange(
         return current > 0 ? 100 : -100
     }
 
-    return ((current - previous) / previous) * 100
+    return ((current - previous) / Math.abs(previous)) * 100
 }
 
 function fillMissingDays(
@@ -223,7 +230,7 @@ function fillMissingDays(
     })
 
     const transactionsByDay = allDays.map((day) => {
-        const found = activeDays.find((d) => isSameDay(new Date(d.date), day))
+        const found = activeDays.find((d) => isSameDay(parse(d.date, "yyyy-MM-dd", new Date()), day))
 
         if (found) {
             return found

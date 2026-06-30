@@ -29,7 +29,10 @@ export const BarVariant = ({ data }: Props) => {
                     axisLine={false}
                     tickLine={false}
                     dataKey="date"
-                    tickFormatter={(value) => format(value, "dd MMM", { locale: ptBR })}
+                    tickFormatter={(value) => {
+                        const [y, m, d] = value.split("-").map(Number)
+                        return format(new Date(y, m - 1, d), "dd MMM", { locale: ptBR })
+                    }}
                     style={{ fontSize: "12px" }}
                     tickMargin={16}
                 />

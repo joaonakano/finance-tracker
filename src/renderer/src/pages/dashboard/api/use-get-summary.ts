@@ -20,6 +20,7 @@ type UseGetSummaryResult = {
     data: SummaryData | undefined
     isLoading: boolean
     error: Error | null
+    isFetching: boolean
 }
 
 export const useGetSummary = (
@@ -27,17 +28,19 @@ export const useGetSummary = (
 ): UseGetSummaryResult => {
     const { userId, isLoaded } = useAuth()
 
-    const { data: rawData, isLoading, error } = useQuery({
+    const { data: rawData, isLoading, isFetching, error } = useQuery({
         queryKey: ["summary", userId, filters],
         queryFn: async () => {
             if (!userId) {
                 throw new Error("Usuário não encontrado")
             }
 
-            return window.api.summary.getByDate({
+            const payload = {
                 user_id: userId,
                 ...filters,
-            })
+            }
+            console.log("[frontend] useGetSummary fetching with:", payload)
+            return window.api.summary.getByDate(payload)
         },
         enabled: !!userId && isLoaded,
     })
@@ -68,5 +71,5 @@ export const useGetSummary = (
           }
         : undefined
 
-    return { data, isLoading, error }
+    return { data, isLoading, isFetching, error }
 }

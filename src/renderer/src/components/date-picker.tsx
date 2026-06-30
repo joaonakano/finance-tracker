@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
     Popover,
+    PopoverClose,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
@@ -47,6 +48,13 @@ export const DatePicker = ({
                     autoFocus
                     locale={ptBR}
                 />
+                <div className="p-2 border-t">
+                    <PopoverClose asChild>
+                        <Button variant="outline" size="sm" className="w-full">
+                            Fechar
+                        </Button>
+                    </PopoverClose>
+                </div>
             </PopoverContent>
         </Popover>
     )

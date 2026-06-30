@@ -11,10 +11,14 @@ export const CustomTooltip =  ({ active, payload }: any) => {
     const income = payload[0].value
     const expenses = payload[1].value
 
+    // Parse date as local time (not UTC) to avoid timezone shift
+    const [y, m, d] = date.split("-").map(Number)
+    const localDate = new Date(y, m - 1, d)
+
     return (
         <div className="rounded-sm bg-white shadow-sm border overflow-hidden">
             <div className="text-sm p-2 px-3 bg-muted text-muted-foreground">
-                {format(date, "MMM dd, yyyy", { locale: ptBR })}
+                {format(localDate, "MMM dd, yyyy", { locale: ptBR })}
             </div>
             <Separator />
             <div className="p-2 px-3 space-y-1">
@@ -38,7 +42,7 @@ export const CustomTooltip =  ({ active, payload }: any) => {
                                 Despesas
                             </p>
                         <p className="text text-right font-medium">
-                            {formatCurrency(expenses * -1)}
+                            {formatCurrency(expenses)}
                         </p>
                     </div>
                 </div>

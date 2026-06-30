@@ -2,7 +2,7 @@ import { useUser } from "@clerk/react"
 import { format, subDays } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Hand } from "lucide-react"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { DateRange } from "react-day-picker"
 import { useLocation } from "react-router"
 
@@ -33,18 +33,40 @@ export function WelcomeMsg() {
     const isSettingsPage = location.pathname.startsWith("/settings")
     const subtitle = SUBTITLES[location.pathname] ?? SUBTITLES["/"]
 
-    const [date, setDate] = useState<DateRange | undefined>({ from, to })
+    // Draft guarda a seleção em edição. Quando undefined, usa o range aplicado.
+    const [draft, setDraft] = useState<DateRange>()
 
-    const onApply = () => {
-        if (date?.from && date?.to) {
-            setDateRange(date.from, date.to)
+    // Range exibido no calendário: draft se existir, senão o aplicado.
+    const displayRange = draft ?? { from, to }
+
+    // Ao abrir o popover, sincroniza com o range aplicado (limpa draft).
+    const onOpenChange = useCallback(
+        (open: boolean) => {
+            if (open) {
+                setDraft(undefined)
+            }
+        },
+        []
+    )
+
+    const onSelect = useCallback((range: DateRange | undefined) => {
+        setDraft(range)
+    }, [])
+
+    const onApply = useCallback(() => {
+        const active = draft ?? displayRange
+        if (active?.from && active?.to) {
+            setDateRange(active.from, active.to)
+            setDraft(undefined)
         }
-    }
+    }, [draft, displayRange, setDateRange])
 
-    const onReset = () => {
-        setDate(undefined)
+    const onReset = useCallback(() => {
+        setDraft(undefined)
         setDateRange(subDays(new Date(), 30), new Date())
-    }
+    }, [setDateRange])
+
+    const hasValidRange = !!(displayRange?.from && displayRange?.to)
 
     return (
         <div className="bg-linear-to-br from-[#1a2b4a] to-[#2d4a7a] rounded-2xl p-7 lg:p-8 mb-7 text-white flex justify-between items-center flex-wrap gap-4 shadow-[0_8px_32px_rgba(26,43,74,0.15)]">
@@ -60,7 +82,7 @@ export function WelcomeMsg() {
             </div>
 
             {!isSettingsPage && (
-            <Popover>
+            <Popover onOpenChange={onOpenChange}>
                 <PopoverTrigger asChild>
                     <button className="flex gap-8 bg-white/10 px-6 py-3 rounded-xl backdrop-blur-xs hover:bg-white/20 transition cursor-pointer">
                         <div className="text-center">
@@ -78,9 +100,9 @@ export function WelcomeMsg() {
                     <Calendar
                         autoFocus
                         mode="range"
-                        defaultMonth={date?.from}
-                        selected={date}
-                        onSelect={setDate}
+                        defaultMonth={displayRange?.from}
+                        selected={displayRange}
+                        onSelect={onSelect}
                         numberOfMonths={2}
                         locale={ptBR}
                     />
@@ -88,7 +110,7 @@ export function WelcomeMsg() {
                         <PopoverClose asChild>
                             <Button
                                 onClick={onReset}
-                                disabled={!date?.from || !date?.to}
+                                disabled={!hasValidRange}
                                 className="w-full"
                                 variant="outline"
                             >
@@ -98,7 +120,7 @@ export function WelcomeMsg() {
                         <PopoverClose asChild>
                             <Button
                                 onClick={onApply}
-                                disabled={!date?.from || !date?.to}
+                                disabled={!hasValidRange}
                                 className="w-full"
                             >
                                 Aplicar

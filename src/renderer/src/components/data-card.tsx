@@ -51,6 +51,8 @@ interface DataCardProps extends BoxVariants, IconVariants {
     value?: number
     dateRange: string
     percentageChange?: number
+    /** Inverte a lógica de cores: útil para despesas (gastar menos = verde) */
+    invertColors?: boolean
 }
 
 export const DataCard = ({
@@ -59,6 +61,7 @@ export const DataCard = ({
     value = 0,
     variant,
     percentageChange = 0,
+    invertColors = false,
 }: DataCardProps) => {
     return (
         <Card className="hover:-translate-y-1 hover:shadow-md transition-all duration-300 border-slate-200">
@@ -86,8 +89,10 @@ export const DataCard = ({
                 <div className="flex items-center gap-2 text-sm">
                     <span className={cn(
                         "font-medium",
-                        percentageChange > 0 && "text-emerald-600",
-                        percentageChange < 0 && "text-rose-600",
+                        !invertColors && percentageChange > 0 && "text-emerald-600",
+                        !invertColors && percentageChange < 0 && "text-rose-600",
+                        invertColors && percentageChange > 0 && "text-rose-600",
+                        invertColors && percentageChange < 0 && "text-emerald-600",
                         percentageChange === 0 && "text-slate-500",
                     )}>
                         {formatPercentage(percentageChange, { addPrefix: true })}

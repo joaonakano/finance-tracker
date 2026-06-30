@@ -58,6 +58,7 @@ export const DataGrid = () => {
                 percentageChange={data?.expensesChange}
                 icon={TrendingDown}
                 variant="danger"
+                invertColors
                 dateRange={dateRangeLabel}
             />
          

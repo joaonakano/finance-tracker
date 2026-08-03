@@ -52,3 +52,7 @@ npm run dev
 - **Shadcn** - UI modular
 - **Zod** - tratamento e validação
 - **TanStack** - navegação, gerenciamento de estados e cache
+
+## Equipe de Desenvolvimento
+João Vinicius Yuji Nakano
+Boris Philipp Weber Da Luz

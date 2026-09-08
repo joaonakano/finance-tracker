@@ -7,11 +7,11 @@ type UseGetSummaryFilters = Omit<SummaryInput, "user_id">
 
 type SummaryData = {
     incomeAmount: number
-    incomeChange: number
+    incomeChange: number | null
     expensesAmount: number
-    expensesChange: number
+    expensesChange: number | null
     remainingAmount: number
-    remainingChange: number
+    remainingChange: number | null
     categories: CategorySummary[]
     days: ActiveDay[]
 }
@@ -39,8 +39,8 @@ export const useGetSummary = (
                 user_id: userId,
                 ...filters,
             }
-            console.log("[frontend] useGetSummary fetching with:", payload)
-            return window.api.summary.getByDate(payload)
+
+            return window.api.summary.getByMonth(payload)
         },
         enabled: !!userId && isLoaded,
     })
@@ -62,6 +62,10 @@ export const useGetSummary = (
               categories: rawData.categories.map((c) => ({
                   ...c,
                   value: convertAmountFromMiliunits(c.value),
+                  items: c.items?.map((item) => ({
+                      ...item,
+                      value: convertAmountFromMiliunits(item.value),
+                  })),
               })),
               days: rawData.days.map((d) => ({
                   ...d,

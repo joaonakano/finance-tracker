@@ -1,7 +1,6 @@
 export type SummaryInput = {
     user_id: string
-    from?: string
-    to?: string
+    month?: string
     account_id?: string
 }
 
@@ -14,6 +13,8 @@ export type FinancialData = {
 export type CategorySummary = {
     name: string
     value: number
+    /** Presente apenas no agregado "Outras": categorias que foram agrupadas nele */
+    items?: CategorySummary[]
 }
 
 export type ActiveDay = {
@@ -25,9 +26,10 @@ export type ActiveDay = {
 export type SummaryOutput = {
     currentPeriod: FinancialData
     lastPeriod: FinancialData
-    incomeChange: number
-    expensesChange: number
-    remainingChange: number
+    /** null quando o período anterior não tem base para comparação (ex: 0 no anterior e algo no atual) */
+    incomeChange: number | null
+    expensesChange: number | null
+    remainingChange: number | null
     categories: CategorySummary[]
     days: ActiveDay[]
 }

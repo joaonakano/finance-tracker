@@ -7,11 +7,10 @@ import { SpendingPie, SpendingPieLoading } from "./spending-pie"
 
 export const DataCharts = () => {
     const { accountId } = useAccountFilter()
-    const { from, to } = useDateFilter()
+    const { month } = useDateFilter()
 
     const { data, isLoading, error } = useGetSummary({
-        from: format(from, "yyyy-MM-dd"),
-        to: format(to, "yyyy-MM-dd"),
+        month: format(month, "yyyy-MM"),
         account_id: accountId !== "all" ? accountId : undefined,
     })
 

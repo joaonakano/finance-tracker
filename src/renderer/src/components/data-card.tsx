@@ -50,7 +50,8 @@ interface DataCardProps extends BoxVariants, IconVariants {
     title: string
     value?: number
     dateRange: string
-    percentageChange?: number
+    /** null indica que não há base no período anterior para comparar */
+    percentageChange?: number | null
     /** Inverte a lógica de cores: útil para despesas (gastar menos = verde) */
     invertColors?: boolean
 }
@@ -60,9 +61,10 @@ export const DataCard = ({
     title,
     value = 0,
     variant,
-    percentageChange = 0,
+    percentageChange,
     invertColors = false,
 }: DataCardProps) => {
+    const hasComparison = percentageChange !== null && percentageChange !== undefined
     return (
         <Card className="hover:-translate-y-1 hover:shadow-md transition-all duration-300 border-slate-200">
             <CardHeader className="flex flex-row items-center justify-between gap-x-4 pb-2">
@@ -87,18 +89,24 @@ export const DataCard = ({
             </CardHeader>
             <CardContent className="pt-0">
                 <div className="flex items-center gap-2 text-sm">
-                    <span className={cn(
-                        "font-medium",
-                        !invertColors && percentageChange > 0 && "text-emerald-600",
-                        !invertColors && percentageChange < 0 && "text-rose-600",
-                        invertColors && percentageChange > 0 && "text-rose-600",
-                        invertColors && percentageChange < 0 && "text-emerald-600",
-                        percentageChange === 0 && "text-slate-500",
-                    )}>
-                        {formatPercentage(percentageChange, { addPrefix: true })}
-                    </span>
+                    {hasComparison ? (
+                        <span className={cn(
+                            "font-medium",
+                            !invertColors && percentageChange > 0 && "text-emerald-600",
+                            !invertColors && percentageChange < 0 && "text-rose-600",
+                            invertColors && percentageChange > 0 && "text-rose-600",
+                            invertColors && percentageChange < 0 && "text-emerald-600",
+                            percentageChange === 0 && "text-slate-500",
+                        )}>
+                            {formatPercentage(percentageChange, { addPrefix: true })}
+                        </span>
+                    ) : (
+                        <span className="font-medium text-slate-500">
+                            Novo
+                        </span>
+                    )}
                     <span className="text-slate-400 text-xs">
-                        do período anterior
+                        {hasComparison ? "do mês anterior" : "sem dados no mês anterior"}
                     </span>
                 </div>
             </CardContent>

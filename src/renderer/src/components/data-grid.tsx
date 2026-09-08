@@ -1,5 +1,5 @@
 import { format } from "date-fns"
-import { formatDateRange } from "@renderer/lib/utils"
+import { ptBR } from "date-fns/locale"
 import { useGetSummary } from "@renderer/pages/dashboard/api/use-get-summary"
 import { useAccountFilter } from "@renderer/hooks/use-account-filter"
 import { useDateFilter } from "@renderer/hooks/use-date-filter"
@@ -12,21 +12,19 @@ import { DataCard, DataCardHardLoading } from "@/components/data-card"
 import { Button } from "@/components/ui/button"
 
 export const DataGrid = () => {   
-    const { from, to } = useDateFilter()
+    const { month } = useDateFilter()
     const { accountId } = useAccountFilter()
     const queryClient = useQueryClient()
     const { userId } = useAuth()
 
-    const fromStr = format(from, "yyyy-MM-dd")
-    const toStr = format(to, "yyyy-MM-dd")
+    const monthStr = format(month, "yyyy-MM")
 
     const { data, isLoading, error, isFetching } = useGetSummary({
-        from: fromStr,
-        to: toStr,
+        month: monthStr,
         account_id: accountId !== "all" ? accountId : undefined,
     })
 
-    const dateRangeLabel = formatDateRange({ from, to })
+    const dateRangeLabel = format(month, "MMMM yyyy", { locale: ptBR })
 
     const handleRefresh = () => {
         queryClient.invalidateQueries({ queryKey: ["summary", userId] })

@@ -21,5 +21,5 @@ export const IPC_CHANNELS = {
     TRANSACTIONS_BULK_DELETE: 'transactions:bulkDelete',
     TRANSACTIONS_BULK_CREATE: 'transactions:bulkCreate',
 
-    SUMMARY_GET_BY_DATE: 'summary:getByDate',
+    SUMMARY_GET_BY_MONTH: 'summary:getByMonth',
 }

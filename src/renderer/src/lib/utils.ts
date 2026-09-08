@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
-import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns"
-import { ptBR } from "date-fns/locale"
+import { eachDayOfInterval, isSameDay } from "date-fns"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,18 +20,6 @@ export function formatCurrency(value: number) {
     currency: "BRL",
     minimumFractionDigits: 2,
   }).format(value)
-}
-
-export function calculatePercentageChange(
-  current: number,
-  previous: number,
-) {
-  if (previous === 0)  {
-    if (current === 0) return 0
-    return current > 0 ? 100 : -100
-  }
-
-  return ((current - previous) / Math.abs(previous)) * 100
 }
 
 export function fillMissingDays(
@@ -68,27 +55,6 @@ export function fillMissingDays(
   })
 
   return transactionsByDay
-}
-
-type Period = {
-  from: string | Date | undefined
-  to: string | Date | undefined
-}
-
-export function formatDateRange (period?: Period) {
-  const defaultTo = new Date()
-  const defaultFrom = subDays(defaultTo, 30)
-
-  if (!period?.from) {
-    return `${format(defaultFrom, "dd MMM", { locale: ptBR })} - ${format(defaultTo, "dd MMM, y", { locale: ptBR })}`
-  }
-
-  
-  if (period.to) {
-    return `${format(period.from, "dd MMM", { locale: ptBR })} - ${format(period.to, "dd MMM, y", { locale: ptBR })}`
-  }
-
-  return format(period.from, "dd MMM, y", { locale: ptBR })
 }
 
 export function formatPercentage(

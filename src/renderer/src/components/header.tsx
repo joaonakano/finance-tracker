@@ -10,12 +10,14 @@ export function Header() {
     const { user, isLoaded } = useUser()
     const { signOut } = useClerk()
     const [profileOpen, setProfileOpen] = useState(false)
+    const [imageFailed, setImageFailed] = useState(false)
 
     const initials = isLoaded && user
         ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
         : "??"
 
     const displayName = user?.fullName ?? user?.username ?? "Usuário"
+    const imageUrl = user?.imageUrl
 
     return (
         <header className="mb-8">
@@ -55,9 +57,18 @@ export function Header() {
                                 onClick={() => setProfileOpen(!profileOpen)}
                                 className="flex items-center gap-3 pl-2 pr-4 py-1.5 rounded-full bg-white border border-slate-200 hover:border-[#2d4a7a] hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer"
                             >
-                                <div className="size-[38px] rounded-full bg-linear-to-br from-[#1a2b4a] to-[#2d4a7a] flex items-center justify-center text-white font-semibold text-[15px]">
-                                    {initials}
-                                </div>
+                                {imageUrl && !imageFailed ? (
+                                    <img
+                                        src={imageUrl}
+                                        alt={displayName}
+                                        className="size-[38px] rounded-full object-cover"
+                                        onError={() => setImageFailed(true)}
+                                    />
+                                ) : (
+                                    <div className="size-[38px] rounded-full bg-linear-to-br from-[#1a2b4a] to-[#2d4a7a] flex items-center justify-center text-white font-semibold text-[15px]">
+                                        {initials}
+                                    </div>
+                                )}
                                 <div className="flex flex-col text-left">
                                     <span className="font-semibold text-sm text-slate-800">
                                         {displayName}

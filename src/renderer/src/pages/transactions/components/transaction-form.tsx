@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { Trash } from "lucide-react";
 import { format } from "date-fns";
 
@@ -50,15 +50,6 @@ export const TransactionForm = ({
     const [date, setDate] = useState(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
     const [accountId, setAccountId] = useState(defaultValues?.account_id ?? "")
     const [categoryId, setCategoryId] = useState(defaultValues?.category_id ?? "")
-
-    useEffect(() => {
-        setAmount(defaultValues?.amount ?? null)
-        setPayee(defaultValues?.payee ?? "")
-        setNotes(defaultValues?.notes ?? "")
-        setDate(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
-        setAccountId(defaultValues?.account_id ?? "")
-        setCategoryId(defaultValues?.category_id ?? "")
-    }, [defaultValues])
 
     const accountOptions = useMemo(() =>
         accounts.map((account) => ({

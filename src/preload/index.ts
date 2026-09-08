@@ -49,8 +49,8 @@ const api: Api = {
       ipcRenderer.invoke(IPC_CHANNELS.TRANSACTIONS_BULK_CREATE, data),
   },
   summary: {
-    getByDate: (data) =>
-      ipcRenderer.invoke(IPC_CHANNELS.SUMMARY_GET_BY_DATE, data),
+    getByMonth: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.SUMMARY_GET_BY_MONTH, data),
   }
 }
 

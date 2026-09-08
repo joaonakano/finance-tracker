@@ -1,29 +1,51 @@
-import { createContext, useContext, useState, type ReactNode } from "react"
-import { subDays } from "date-fns"
+import { createContext, useCallback, useContext, useState, type ReactNode } from "react"
+import { addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns"
 
 type DateFilterContextValue = {
+    month: Date
     from: Date
     to: Date
-    setDateRange: (from: Date, to: Date) => void
+    setMonth: (month: Date) => void
+    previousMonth: () => void
+    nextMonth: () => void
+    goToCurrentMonth: () => void
 }
 
 const DateFilterContext = createContext<DateFilterContextValue>({
-    from: subDays(new Date(), 30),
-    to: new Date(),
-    setDateRange: () => {},
+    month: startOfMonth(new Date()),
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date()),
+    setMonth: () => {},
+    previousMonth: () => {},
+    nextMonth: () => {},
+    goToCurrentMonth: () => {},
 })
 
 export const DateFilterProvider = ({ children }: { children: ReactNode }) => {
-    const [from, setFrom] = useState<Date>(() => subDays(new Date(), 30))
-    const [to, setTo] = useState<Date>(() => new Date())
+    const [month, setMonth] = useState<Date>(() => startOfMonth(new Date()))
 
-    const setDateRange = (from: Date, to: Date) => {
-        setFrom(from)
-        setTo(to)
-    }
+    const from = startOfMonth(month)
+    const to = endOfMonth(month)
+
+    const previousMonth = useCallback(() => setMonth((m) => subMonths(m, 1)), [])
+    const nextMonth = useCallback(() => setMonth((m) => addMonths(m, 1)), [])
+    const goToCurrentMonth = useCallback(
+        () => setMonth(startOfMonth(new Date())),
+        []
+    )
 
     return (
-        <DateFilterContext.Provider value={{ from, to, setDateRange }}>
+        <DateFilterContext.Provider
+            value={{
+                month,
+                from,
+                to,
+                setMonth,
+                previousMonth,
+                nextMonth,
+                goToCurrentMonth,
+            }}
+        >
             {children}
         </DateFilterContext.Provider>
     )

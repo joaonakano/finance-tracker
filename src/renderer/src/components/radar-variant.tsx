@@ -4,8 +4,11 @@ import {
     PolarRadiusAxis,
     Radar,
     RadarChart,
-    ResponsiveContainer
+    ResponsiveContainer,
+    Tooltip
 } from "recharts"
+
+import { CategoryTooltip } from "./category-tooltip"
 
 type Props = {
     data?: {
@@ -26,6 +29,7 @@ export const RadarVariant = ({ data }: Props) => {
                 <PolarGrid />
                 <PolarAngleAxis style={{ fontStyle: "12px"}} dataKey="name" />
                 <PolarRadiusAxis style={{ fontStyle: "12px"}}/>
+                <Tooltip content={CategoryTooltip} />
                 <Radar dataKey="value" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
             </RadarChart>
         </ResponsiveContainer>

@@ -86,6 +86,7 @@ export const EditTransactionSheet = () => {
                             </div>
                         ) : (
                             <TransactionForm
+                                key={id}
                                 id={id}
                                 defaultValues={defaultValues}
                                 onSubmit={onSubmit}

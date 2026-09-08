@@ -74,6 +74,7 @@ export const EditCategorySheet = () => {
                             </div>
                         ) : (
                             <CategoryForm
+                                key={id}
                                 id={id}
                                 defaultValues={categoryQuery.category ? {
                                     name: categoryQuery.category.name,

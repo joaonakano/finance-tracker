@@ -6,34 +6,32 @@ import {
     SummaryOutput,
 } from "@shared/types"
 
-import { eachDayOfInterval, isSameDay, parse, subDays, differenceInDays } from "date-fns"
+import {
+    eachDayOfInterval,
+    endOfMonth,
+    format,
+    isSameDay,
+    parse,
+    startOfMonth,
+    subMonths,
+} from "date-fns"
 
 import { db } from "../db/db"
 
 export class SummaryRepository {
-    static getByDate(data: SummaryInput): SummaryOutput {
-        const defaultTo = new Date()
-        const defaultFrom = subDays(defaultTo, 30)
+    static getByMonth(data: SummaryInput): SummaryOutput {
+        const now = new Date()
+        const monthKey = data.month ?? format(now, "yyyy-MM")
 
-        const startDate = data.from ?? defaultFrom.toISOString().slice(0, 10)
-        const endDate = data.to ?? defaultTo.toISOString().slice(0, 10)
+        const [year, month] = monthKey.split("-").map(Number)
+        const currentMonth = new Date(year, month - 1, 1)
 
-        console.log("[summary] getByDate called with:", {
-            from: data.from,
-            to: data.to,
-            startDate,
-            endDate,
-        })
+        const startDate = format(startOfMonth(currentMonth), "yyyy-MM-dd")
+        const endDate = format(endOfMonth(currentMonth), "yyyy-MM-dd")
 
-        const periodLength =
-            differenceInDays(new Date(endDate), new Date(startDate)) + 1
-
-        const lastStartDate = subDays(new Date(startDate), periodLength)
-            .toISOString()
-            .slice(0, 10)
-        const lastEndDate = subDays(new Date(endDate), periodLength)
-            .toISOString()
-            .slice(0, 10)
+        const previousMonth = subMonths(currentMonth, 1)
+        const lastStartDate = format(startOfMonth(previousMonth), "yyyy-MM-dd")
+        const lastEndDate = format(endOfMonth(previousMonth), "yyyy-MM-dd")
 
         const currentPeriod = this.fetchFinancialData(
             data.user_id,
@@ -78,8 +76,8 @@ export class SummaryRepository {
 
         const days = fillMissingDays(
             activeDays,
-            new Date(startDate),
-            new Date(endDate),
+            parse(startDate, "yyyy-MM-dd", new Date()),
+            parse(endDate, "yyyy-MM-dd", new Date()),
         )
 
         return {
@@ -156,8 +154,8 @@ export class SummaryRepository {
                 ...(accountId ? [accountId] : []),
             ) as { name: string; value: number }[]
 
-        const topCategories = rows.slice(0, 3)
-        const otherCategories = rows.slice(3)
+        const topCategories: CategorySummary[] = rows.slice(0, 5)
+        const otherCategories = rows.slice(5)
 
         if (otherCategories.length > 0) {
             const otherSum = otherCategories.reduce(
@@ -165,7 +163,11 @@ export class SummaryRepository {
                 0,
             )
 
-            topCategories.push({ name: "Other", value: otherSum })
+            topCategories.push({
+                name: "Outras",
+                value: otherSum,
+                items: otherCategories,
+            })
         }
 
         return topCategories
@@ -206,10 +208,12 @@ export class SummaryRepository {
 function calculatePercentageChange(
     current: number,
     previous: number,
-): number {
+): number | null {
     if (previous === 0) {
-        if (current === 0) return 0
-        return current > 0 ? 100 : -100
+        // Sem base no período anterior: se o atual também for 0, é estagnação
+        // real (0%). Se o atual tiver valor, não há uma variação percentual
+        // significativa a reportar (não é "aumento de X%", é ausência de comparação).
+        return current === 0 ? 0 : null
     }
 
     return ((current - previous) / Math.abs(previous)) * 100
@@ -220,28 +224,22 @@ function fillMissingDays(
     startDate: Date,
     endDate: Date,
 ): ActiveDay[] {
-    if (activeDays.length === 0) {
-        return []
-    }
-
     const allDays = eachDayOfInterval({
         start: startDate,
         end: endDate,
     })
 
-    const transactionsByDay = allDays.map((day) => {
+    return allDays.map((day) => {
         const found = activeDays.find((d) => isSameDay(parse(d.date, "yyyy-MM-dd", new Date()), day))
 
         if (found) {
             return found
         } else {
             return {
-                date: day.toISOString().slice(0, 10),
+                date: format(day, "yyyy-MM-dd"),
                 income: 0,
                 expenses: 0,
             }
         }
     })
-
-    return transactionsByDay
 }

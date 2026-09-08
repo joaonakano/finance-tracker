@@ -53,6 +53,6 @@ export interface Api {
     },
 
     summary: {
-        getByDate(data: SummaryInput): Promise<SummaryOutput>
+        getByMonth(data: SummaryInput): Promise<SummaryOutput>
     }
 }

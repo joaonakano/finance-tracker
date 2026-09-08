@@ -74,6 +74,7 @@ export const EditAccountSheet = () => {
                             </div>
                         ) : (
                             <AccountForm
+                                key={id}
                                 id={id}
                                 defaultValues={accountQuery.account ? {
                                     name: accountQuery.account.name,

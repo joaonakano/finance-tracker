@@ -14,6 +14,7 @@ const options = [
     "amount",
     "payee",
     "date",
+    "notes",
 ]
 
 const FILTER_LABELS: Record<string, string> = {

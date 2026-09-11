@@ -2,8 +2,10 @@ import { Button } from "@renderer/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@renderer/components/ui/card"
 import { useState } from "react"
 import { ImportTable } from "./import-table"
+import { ImportReviewTable, type ParsedImportRow } from "./import-review-table"
 import { convertAmountToMiliunits } from "@renderer/lib/utils"
 import { format, parse } from "date-fns"
+import { BulkCreateTransactionItem } from "@shared/types"
 
 const dateFormat = "yyyy-MM-dd HH:mm:ss"
 const outputFormat = "yyyy-MM-dd"
@@ -21,16 +23,19 @@ interface SelectedColumnsState {
 type Props = {
     data: string[][]
     onCancel: () => void
-    onSubmit: (data: any) => void
+    onSubmit: (data: BulkCreateTransactionItem[]) => void
+    isSubmitting?: boolean
 }
 
 export const ImportCard = ({
     data,
     onCancel,
     onSubmit,
+    isSubmitting,
 }: Props) => {
     const [selectedColumns, setSelectedColumns] = useState<SelectedColumnsState>({})
-    
+    const [parsedRows, setParsedRows] = useState<ParsedImportRow[] | null>(null)
+
     const headers = data[0]
     const body = data.slice(1)
 
@@ -91,15 +96,38 @@ export const ImportCard = ({
             }, {})
         })
 
-        const formattedData = arrayOfData.map((item) => ({
+        const formattedData: ParsedImportRow[] = arrayOfData.map((item) => ({
             ...item,
             amount: convertAmountToMiliunits(parseFloat(item.amount)),
             date: format(parse(item.date, dateFormat, new Date()), outputFormat)
         }))
 
-        onSubmit(formattedData)
+        setParsedRows(formattedData)
     }
-    
+
+    if (parsedRows) {
+        return (
+            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl font-bold line-clamp-1">
+                            Revisar Importação
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ImportReviewTable
+                            rows={parsedRows}
+                            onBack={() => setParsedRows(null)}
+                            onCancel={onCancel}
+                            onSubmit={onSubmit}
+                            isSubmitting={isSubmitting}
+                        />
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
+
     return (
         <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
             <Card>

@@ -1,8 +1,9 @@
 
 import { BulkCreateTransactionItem } from "@shared/types"
 
-import { Button } from "@renderer/components/ui/button";
-import { Plus, ArrowLeftRight } from "lucide-react";
+import { Button, buttonVariants } from "@renderer/components/ui/button";
+import { Plus, ArrowLeftRight, Download } from "lucide-react";
+import { useCSVDownloader } from "react-papaparse";
 
 import { DataTable } from "@renderer/components/data-table";
 import { Skeleton } from "@renderer/components/ui/skeleton";
@@ -13,14 +14,13 @@ import { columns } from "./components/columns";
 import { useState } from "react";
 import { UploadButton } from "./components/upload-button";
 import { ImportCard } from "./components/import-card";
-import { useSelectAccount } from "../accounts/hooks/use-select-account";
 import { useAccountFilter } from "@renderer/hooks/use-account-filter";
 import { useDateFilter } from "@renderer/hooks/use-date-filter";
 import { format } from "date-fns";
-import { toast } from "sonner";
 import { useBulkCreateTransactions } from "./api/use-bulk-create-transactions";
 import { DashboardLayout } from "@renderer/components/layout";
 import { AccountFilter } from "@renderer/components/account-filter";
+import { cn } from "@renderer/lib/utils";
 
 enum VARIANTS {
     LIST = 'LIST',
@@ -34,20 +34,20 @@ const INITIAL_IMPORT_RESULTS = {
 }
 
 export default function TransactionsPage() {
-    const [accountDialog, confirm] = useSelectAccount()
+    const { CSVDownloader, Type } = useCSVDownloader()
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST)
     const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS)
- 
+
     const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
         setImportResults(results)
         setVariant(VARIANTS.IMPORT)
     }
- 
+
     const onCancelImport = () => {
         setImportResults(INITIAL_IMPORT_RESULTS)
         setVariant(VARIANTS.LIST)
     }
-    
+
     const newTransaction = useNewTransaction()
     const createTransactions = useBulkCreateTransactions()
     const deleteTransactions = useBulkDeleteTransactions()
@@ -58,25 +58,22 @@ export default function TransactionsPage() {
         start_date: format(from, "yyyy-MM-dd"),
         end_date: format(to, "yyyy-MM-dd"),
     })
- 
-    const onSubmitImport = async (values: BulkCreateTransactionItem[]): Promise<void> => {
-        const accountId = await confirm()
- 
-        if (!accountId) {
-            toast.error("Selecione uma conta para continuar.")
-            return
-        }
- 
-        const data: BulkCreateTransactionItem[] = values.map((value) => ({
-            ...value,
-            account_id: accountId as string
-        }))
- 
-        createTransactions.mutate({ transactions: data }, {
+
+    const onSubmitImport = (values: BulkCreateTransactionItem[]): void => {
+        createTransactions.mutate({ transactions: values }, {
             onSuccess: () => onCancelImport()
         })
     }
-    
+
+    const exportData = transactions.map((transaction) => ({
+        Data: transaction.date,
+        Beneficiário: transaction.payee,
+        Categoria: transaction.category ?? "Sem categoria",
+        Conta: transaction.account,
+        Valor: transaction.amount,
+        Observações: transaction.notes ?? "",
+    }))
+
     if (isLoading) {
         return (
             <DashboardLayout>
@@ -91,22 +88,19 @@ export default function TransactionsPage() {
     
     if (variant === VARIANTS.IMPORT) {
         return (
-            <>
-                {accountDialog}
-                <DashboardLayout>
-                    <ImportCard 
-                        data={importResults.data}
-                        onCancel={onCancelImport}
-                        onSubmit={onSubmitImport}
-                    />
-                </DashboardLayout>
-            </>
+            <DashboardLayout>
+                <ImportCard
+                    data={importResults.data}
+                    onCancel={onCancelImport}
+                    onSubmit={onSubmitImport}
+                    isSubmitting={createTransactions.isPending}
+                />
+            </DashboardLayout>
         )
     }
-    
+
     return (
         <DashboardLayout>
-            {accountDialog}
             <div className="pb-10 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                     <AccountFilter />
@@ -116,6 +110,20 @@ export default function TransactionsPage() {
                             Adicionar transação
                         </Button>
                         <UploadButton onUpload={onUpload} />
+                        <CSVDownloader
+                            type={Type.Button}
+                            filename={`transacoes-${format(from, "yyyy-MM")}`}
+                            bom
+                            data={exportData}
+                            className={cn(
+                                buttonVariants({ variant: "outline" }),
+                                "w-full lg:w-auto gap-2 rounded-lg",
+                                transactions.length === 0 && "pointer-events-none opacity-50"
+                            )}
+                        >
+                            <Download className="size-4" />
+                            Exportar CSV
+                        </CSVDownloader>
                     </div>
                 </div>
                 <DataTable

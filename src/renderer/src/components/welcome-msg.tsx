@@ -82,7 +82,7 @@ export function WelcomeMsg() {
                                         Mês
                                     </div>
                                     <div className="text-lg font-bold mt-0.5 whitespace-nowrap capitalize">
-                                        {format(month, "MMMM yyyy", { locale: ptBR })}
+                                        {format(month, "MMM yyyy", { locale: ptBR })}
                                     </div>
                                 </div>
                             </button>

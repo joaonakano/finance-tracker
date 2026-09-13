@@ -8,6 +8,7 @@ import CategoriesPage from "@renderer/pages/categories/CategoriesPage";
 import TransactionsPage from "@renderer/pages/transactions/TransactionsPage";
 import DashboardPage from "@renderer/pages/dashboard/DashboardPage";
 import SettingsPage from "@renderer/pages/settings/SettingsPage";
+import FaqPage from "@renderer/pages/faq/FaqPage";
 import { AccountFilterProvider } from "@renderer/hooks/use-account-filter";
 import { DateFilterProvider } from "@renderer/hooks/use-date-filter";
 
@@ -24,6 +25,7 @@ export function RoutesApp() {
                 <Route path="/accounts" element={<AccountsPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/transactions" element={<TransactionsPage />} />
+                <Route path="/faq" element={<FaqPage />} />
                 <Route path="/settings/*" element={<SettingsPage />} />
             </Route>
 

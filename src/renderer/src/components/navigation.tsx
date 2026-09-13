@@ -1,4 +1,4 @@
-import { Menu, PieChart, ArrowLeftRight, Wallet, Tag, Settings } from "lucide-react"
+import { Menu, PieChart, ArrowLeftRight, Wallet, Tag, Settings, HelpCircle } from "lucide-react"
 import { useLocation, useNavigate } from "react-router"
 import { useMedia } from "react-use"
 import { useState } from "react"
@@ -30,6 +30,11 @@ const routes = [
         href: "/categories",
         label: "Categorias",
         icon: Tag,
+    },
+    {
+        href: "/faq",
+        label: "FAQ",
+        icon: HelpCircle,
     },
     {
         href: "/settings",

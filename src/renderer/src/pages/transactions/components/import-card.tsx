@@ -107,7 +107,7 @@ export const ImportCard = ({
 
     if (parsedRows) {
         return (
-            <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+            <div className="w-full pb-10 -mt-10">
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-xl font-bold line-clamp-1">
@@ -129,7 +129,7 @@ export const ImportCard = ({
     }
 
     return (
-        <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+        <div className="w-full pb-10 -mt-10">
             <Card>
                 <CardHeader className="flex flex-col gap-y-2 lg:flex-row lg:items-center lg:justify-between w-full">
                     <CardTitle className="text-xl font-bold line-clamp-1">

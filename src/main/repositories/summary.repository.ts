@@ -67,6 +67,13 @@ export class SummaryRepository {
             data.account_id,
         )
 
+        const accounts = this.fetchAccountSummary(
+            data.user_id,
+            startDate,
+            endDate,
+            data.account_id,
+        )
+
         const activeDays = this.fetchActiveDays(
             data.user_id,
             startDate,
@@ -87,6 +94,7 @@ export class SummaryRepository {
             expensesChange,
             remainingChange,
             categories,
+            accounts,
             days,
         }
     }
@@ -154,23 +162,63 @@ export class SummaryRepository {
                 ...(accountId ? [accountId] : []),
             ) as { name: string; value: number }[]
 
-        const topCategories: CategorySummary[] = rows.slice(0, 5)
-        const otherCategories = rows.slice(5)
+        return this.groupTopWithOthers(rows)
+    }
 
-        if (otherCategories.length > 0) {
-            const otherSum = otherCategories.reduce(
-                (sum, c) => sum + c.value,
+    private static fetchAccountSummary(
+        userId: string,
+        startDate: string,
+        endDate: string,
+        accountId?: string,
+    ): CategorySummary[] {
+        const rows = db
+            .prepare(
+                `
+            SELECT
+                a.name,
+                SUM(ABS(t.amount)) AS value
+            FROM transactions t
+            INNER JOIN accounts a ON t.account_id = a.id
+            WHERE a.user_id = ?
+              AND t.amount < 0
+              AND t.date >= ?
+              AND t.date <= ?
+              ${accountId ? "AND t.account_id = ?" : ""}
+            GROUP BY a.name
+            ORDER BY value DESC
+        `,
+            )
+            .all(
+                userId,
+                startDate,
+                endDate,
+                ...(accountId ? [accountId] : []),
+            ) as { name: string; value: number }[]
+
+        return this.groupTopWithOthers(rows)
+    }
+
+    private static groupTopWithOthers(
+        rows: { name: string; value: number }[],
+        topCount = 5,
+    ): CategorySummary[] {
+        const topItems: CategorySummary[] = rows.slice(0, topCount)
+        const otherItems = rows.slice(topCount)
+
+        if (otherItems.length > 0) {
+            const otherSum = otherItems.reduce(
+                (sum, item) => sum + item.value,
                 0,
             )
 
-            topCategories.push({
+            topItems.push({
                 name: "Outras",
                 value: otherSum,
-                items: otherCategories,
+                items: otherItems,
             })
         }
 
-        return topCategories
+        return topItems
     }
 
     private static fetchActiveDays(

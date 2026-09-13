@@ -35,7 +35,8 @@ export const useUpdateTransaction = (options?: {
             queryClient.invalidateQueries({ queryKey: ["summary"] })
             options?.onSuccess?.()
         },
-        onError: () => {
+        onError: (error) => {
+            console.error("[useUpdateTransaction]", error)
             toast.error("Falha ao atualizar transacao")
         },
     })

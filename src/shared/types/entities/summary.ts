@@ -31,5 +31,6 @@ export type SummaryOutput = {
     expensesChange: number | null
     remainingChange: number | null
     categories: CategorySummary[]
+    accounts: CategorySummary[]
     days: ActiveDay[]
 }

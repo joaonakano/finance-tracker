@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import CurrencyInput from "react-currency-input-field"
 import { Info, MinusCircle, PlusCircle } from "lucide-react"
 import { cn } from "@renderer/lib/utils"
@@ -16,34 +16,28 @@ type Props = {
     disabled?: boolean
 }
 
-/* Todo: refazer a logica de captura e tratamento do valor */
-
 export const AmountInput = ({
     value,
     onChange,
     placeholder,
     disabled,
 }: Props) => {
-    const [rawValue, setRawValue] = useState("")
-    const isInternalUpdate = useRef(false)
-
-    useEffect(() => {
-        if (isInternalUpdate.current) {
-            isInternalUpdate.current = false
-            return
-        }
-        setRawValue(value !== null ? value.toString() : "")
-    }, [value])
+    // O CurrencyInput é usado em modo não controlado (defaultValue) de propósito:
+    // realimentar `value` a cada tecla digitada faz a biblioteca reformatar o campo
+    // no meio da digitação, descartando o dígito que acabou de ser digitado (ex:
+    // ao digitar "85," o valor intermediário arredonda para 85 e reformata o campo
+    // para "85,00" antes do usuário terminar de digitar os centavos). O único caso
+    // em que precisamos forçar um valor vindo de fora é o botão de inverter sinal,
+    // tratado remontando o input via `resetKey`.
+    const [resetKey, setResetKey] = useState(0)
 
     const isIncome = value !== null && value > 0
     const isExpense = value !== null && value < 0
 
     const onReverseValue = () => {
         if (value === null) return
-        const newValue = value * -1
-        isInternalUpdate.current = true
-        setRawValue(newValue.toString())
-        onChange(newValue)
+        onChange(value * -1)
+        setResetKey((key) => key + 1)
     }
 
     const handleValueChange = (
@@ -51,8 +45,6 @@ export const AmountInput = ({
         _name: string | undefined,
         values?: { float: number | null; formatted: string; value: string }
     ) => {
-        isInternalUpdate.current = true
-        setRawValue(_value ?? "")
         onChange(values?.float ?? null)
     }
 
@@ -87,6 +79,7 @@ export const AmountInput = ({
                 </TooltipProvider>
 
                 <CurrencyInput
+                    key={resetKey}
                     prefix="R$"
                     className={cn(
                         "flex h-9 w-full rounded-lg border border-slate-200",
@@ -98,7 +91,7 @@ export const AmountInput = ({
                         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
                     )}
                     placeholder={placeholder}
-                    value={rawValue}
+                    defaultValue={value ?? undefined}
                     decimalsLimit={2}
                     decimalScale={2}
                     onValueChange={handleValueChange}

@@ -50,6 +50,7 @@ export const TransactionForm = ({
     const [date, setDate] = useState(defaultValues?.date ?? format(new Date(), "yyyy-MM-dd"))
     const [accountId, setAccountId] = useState(defaultValues?.account_id ?? "")
     const [categoryId, setCategoryId] = useState(defaultValues?.category_id ?? "")
+    const [attemptedSubmit, setAttemptedSubmit] = useState(false)
 
     const accountOptions = useMemo(() =>
         accounts.map((account) => ({
@@ -91,6 +92,7 @@ export const TransactionForm = ({
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        setAttemptedSubmit(true)
 
         const trimmedPayee = payee.trim()
 
@@ -114,6 +116,10 @@ export const TransactionForm = ({
         return date ? new Date(date + "T00:00:00") : undefined
     }, [date])
 
+    const isAmountInvalid = attemptedSubmit && amount === null
+    const isPayeeInvalid = attemptedSubmit && !payee.trim()
+    const isAccountInvalid = attemptedSubmit && !accountId
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="block space-y-1.5 text-sm font-medium">
@@ -133,8 +139,13 @@ export const TransactionForm = ({
                     placeholder="Valor da transação"
                     disabled={disabled}
                 />
+                {isAmountInvalid && (
+                    <p className="text-xs text-rose-600">
+                        Informe um valor válido para a transação.
+                    </p>
+                )}
             </div>
-            
+
             <div className="block space-y-1.5 text-sm font-medium">
                 <span className="text-muted-foreground">Beneficiário</span>
                 <Input
@@ -145,6 +156,11 @@ export const TransactionForm = ({
                     className="font-normal"
                     required
                 />
+                {isPayeeInvalid && (
+                    <p className="text-xs text-rose-600">
+                        Informe o beneficiário.
+                    </p>
+                )}
             </div>
 
             <div className="block space-y-1.5 text-sm font-medium">
@@ -168,6 +184,11 @@ export const TransactionForm = ({
                     onCreate={handleCreateAccount}
                     disabled={disabled}
                 />
+                {isAccountInvalid && (
+                    <p className="text-xs text-rose-600">
+                        Selecione uma conta.
+                    </p>
+                )}
             </div>
 
             <div className="block space-y-1.5 text-sm font-medium">

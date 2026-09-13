@@ -13,8 +13,19 @@ type SummaryData = {
     remainingAmount: number
     remainingChange: number | null
     categories: CategorySummary[]
+    accounts: CategorySummary[]
     days: ActiveDay[]
 }
+
+const convertBreakdownFromMiliunits = (breakdown: CategorySummary[]): CategorySummary[] =>
+    breakdown.map((entry) => ({
+        ...entry,
+        value: convertAmountFromMiliunits(entry.value),
+        items: entry.items?.map((item) => ({
+            ...item,
+            value: convertAmountFromMiliunits(item.value),
+        })),
+    }))
 
 type UseGetSummaryResult = {
     data: SummaryData | undefined
@@ -59,14 +70,8 @@ export const useGetSummary = (
                   rawData.currentPeriod.remaining
               ),
               remainingChange: rawData.remainingChange,
-              categories: rawData.categories.map((c) => ({
-                  ...c,
-                  value: convertAmountFromMiliunits(c.value),
-                  items: c.items?.map((item) => ({
-                      ...item,
-                      value: convertAmountFromMiliunits(item.value),
-                  })),
-              })),
+              categories: convertBreakdownFromMiliunits(rawData.categories),
+              accounts: convertBreakdownFromMiliunits(rawData.accounts),
               days: rawData.days.map((d) => ({
                   ...d,
                   income: convertAmountFromMiliunits(d.income),

@@ -22,6 +22,7 @@ export function registerSummaryHandlers() {
                     expensesChange: 0,
                     remainingChange: 0,
                     categories: [],
+                    accounts: [],
                     days: [],
                 }
             }

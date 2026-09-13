@@ -1,6 +1,7 @@
 import { ClerkLoaded, ClerkLoading, useUser, useClerk } from "@clerk/react"
 import { Loader2, Bell, HelpCircle, ChevronDown, LogOut } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 import { HeaderLogo } from "@/components/header-logo"
 import { Navigation } from "@/components/navigation"
@@ -9,6 +10,7 @@ import { WelcomeMsg } from "@/components/welcome-msg"
 export function Header() {
     const { user, isLoaded } = useUser()
     const { signOut } = useClerk()
+    const navigate = useNavigate()
     const [profileOpen, setProfileOpen] = useState(false)
     const [imageFailed, setImageFailed] = useState(false)
 
@@ -39,6 +41,7 @@ export function Header() {
 
                     {/* Help button */}
                     <button
+                        onClick={() => navigate("/faq")}
                         className="size-11 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-white hover:border-[#2d4a7a] hover:text-[#2d4a7a] transition-all hover:-translate-y-0.5 hover:shadow-sm cursor-pointer"
                         title="Ajuda"
                     >

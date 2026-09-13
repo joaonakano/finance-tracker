@@ -6,3 +6,4 @@ out
 *.log*
 .env
 .deepcode
+.claude

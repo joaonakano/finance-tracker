@@ -19,6 +19,7 @@ const SUBTITLES: Record<string, string> = {
     "/transactions": "Gerencie suas transações financeiras",
     "/accounts": "Gerencie suas contas bancárias",
     "/categories": "Organize suas categorias",
+    "/faq": "Tire suas dúvidas sobre o sistema",
     "/settings": "Ajuste as preferências do sistema",
 }
 
@@ -33,7 +34,7 @@ export function WelcomeMsg() {
     const location = useLocation()
 
     const firstName = user?.firstName ?? user?.username ?? ""
-    const isSettingsPage = location.pathname.startsWith("/settings")
+    const hideMonthNav = location.pathname.startsWith("/settings") || location.pathname.startsWith("/faq")
     const subtitle = SUBTITLES[location.pathname] ?? SUBTITLES["/"]
 
     const [pickerYear, setPickerYear] = useState(() => month.getFullYear())
@@ -64,7 +65,7 @@ export function WelcomeMsg() {
                 </p>
             </div>
 
-            {!isSettingsPage && (
+            {!hideMonthNav && (
                 <div className="flex items-center gap-1">
                     <button
                         onClick={previousMonth}

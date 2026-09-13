@@ -7,10 +7,10 @@ import { RestartAuthFlowButton } from "./restart-auth-flow-button"
 export const SignUpPage = () => {
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100/80 flex items-center justify-center p-4">
-            <RestartAuthFlowButton />
             <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,20,40,0.08)] border border-white/80 bg-white/70 backdrop-blur-xl">
                 {/* Left: form */}
-                <div className="flex flex-col items-center justify-center px-8 py-14">
+                <div className="relative flex flex-col items-center justify-center px-8 py-14">
+                    <RestartAuthFlowButton />
                     <div className="w-full max-w-sm space-y-8">
                         <div className="text-center space-y-2">
                             <img src={logo} alt="Logo" className="size-10 mx-auto mb-4 brightness-0" />

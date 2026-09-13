@@ -6,6 +6,9 @@ import { ArrowLeft } from "lucide-react"
  * uma navegação normal do react-router entre /sign-in e /sign-up. Por isso,
  * um botão "Voltar" precisa forçar um reload completo da página para
  * reiniciar o Clerk do zero — o mesmo efeito de fechar e reabrir o app.
+ *
+ * Fica ancorado dentro do card (posição absoluta relativa ao painel do
+ * formulário), não na viewport, para acompanhar o card em qualquer resolução.
  */
 export const RestartAuthFlowButton = () => {
     const handleRestart = () => {
@@ -20,11 +23,11 @@ export const RestartAuthFlowButton = () => {
         <button
             type="button"
             onClick={handleRestart}
-            title="Reiniciar o formulário e voltar para o login"
-            className="fixed top-6 left-6 flex items-center gap-1.5 rounded-full border border-white/80 bg-white/70 px-4 py-2 text-sm font-medium text-slate-500 shadow-sm backdrop-blur-xl transition-colors hover:bg-white hover:text-slate-800 cursor-pointer"
+            title="Voltar"
+            aria-label="Voltar"
+            className="absolute top-4 left-4 flex size-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-900/5 hover:text-slate-600 cursor-pointer"
         >
             <ArrowLeft className="size-4" />
-            Voltar
         </button>
     )
 }

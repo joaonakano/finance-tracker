@@ -1,9 +1,9 @@
 {
   "name": "finance-tracker",
-  "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "version": "1.2.0",
+  "description": "Aplicação em Electron para gerenciar transações financeiras",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "github.com/joaonakano",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",

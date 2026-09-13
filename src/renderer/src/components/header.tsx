@@ -33,7 +33,7 @@ export function Header() {
                         className="relative size-11 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-white hover:border-[#2d4a7a] hover:text-[#2d4a7a] transition-all hover:-translate-y-0.5 hover:shadow-sm cursor-pointer"
                         title="Notificações"
                     >
-                        <Bell className="size-[18px]" />
+                        <Bell className="size-[18px] text-slate-300" />
                         {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
                             3
                         </span> */}

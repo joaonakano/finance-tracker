@@ -15,6 +15,8 @@ import {
     GetCategoryInput,
     GetTransactionInput,
     GetTransactionsInput,
+    SeedDefaultsInput,
+    SeedDefaultsOutput,
     SummaryInput,
     SummaryOutput,
     TransactionWithRelations,
@@ -54,5 +56,9 @@ export interface Api {
 
     summary: {
         getByMonth(data: SummaryInput): Promise<SummaryOutput>
+    },
+
+    onboarding: {
+        seedDefaults(data: SeedDefaultsInput): Promise<SeedDefaultsOutput>
     }
 }

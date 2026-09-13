@@ -2,8 +2,12 @@ import { useAuth } from "@clerk/react";
 import { Loader2 } from "lucide-react";
 import { Navigate, Outlet } from "react-router";
 
+import { useSeedDefaultData } from "@renderer/hooks/use-seed-default-data";
+
 export function ProtectedRoute() {
     const { isLoaded, isSignedIn } = useAuth()
+
+    useSeedDefaultData()
 
     if (!isLoaded) {
         return (

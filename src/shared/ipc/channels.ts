@@ -22,4 +22,6 @@ export const IPC_CHANNELS = {
     TRANSACTIONS_BULK_CREATE: 'transactions:bulkCreate',
 
     SUMMARY_GET_BY_MONTH: 'summary:getByMonth',
+
+    ONBOARDING_SEED_DEFAULTS: 'onboarding:seedDefaults',
 }

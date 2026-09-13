@@ -51,6 +51,10 @@ const api: Api = {
   summary: {
     getByMonth: (data) =>
       ipcRenderer.invoke(IPC_CHANNELS.SUMMARY_GET_BY_MONTH, data),
+  },
+  onboarding: {
+    seedDefaults: (data) =>
+      ipcRenderer.invoke(IPC_CHANNELS.ONBOARDING_SEED_DEFAULTS, data),
   }
 }
 
